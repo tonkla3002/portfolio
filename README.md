@@ -24,6 +24,37 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Rollback & Recovery
+
+This project includes a simple, safe rollback system to snapshot and restore the workspace.
+
+### What is captured
+- `src/` (pages, components, styles, data)
+- `public/` assets
+- Config files: `package.json`, `next.config.ts`, `postcss.config.mjs`, `eslint.config.mjs`, `tsconfig.json`, `.gitignore`
+- Any `.env*` files (if present)
+
+### Create a snapshot
+```
+npm run backup
+```
+Creates a timestamped snapshot under `backups/snapshots/<stamp>` including `manifest.json`.
+
+### Restore a snapshot
+Restore latest snapshot:
+```
+npm run restore
+```
+Restore a specific snapshot by stamp:
+```
+npm run restore -- 20250101-120000
+```
+During restore, a pre-restore backup of the current workspace is saved at `backups/pre-restore/<stamp>`.
+
+### Notes
+- `backups/` is git-ignored.
+- Build artifacts like `.next/` and `node_modules/` are excluded.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -38,3 +69,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+# portfolio
