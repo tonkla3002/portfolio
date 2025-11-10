@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Image from "next/image";
 import TypingText, { TypingTextHandle } from "@/components/TypingText";
+import { useI18n } from "@/context/i18n";
 import { useEffect, useRef, useState } from "react";
 import AboutSection from "@/components/sections/AboutSection";
 import SkillsSection from "@/components/sections/SkillsSection";
@@ -13,10 +14,11 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export default function Home() {
+  const { lang, t } = useI18n();
   const [firstScrolled, setFirstScrolled] = useState(false);
   const parallaxRef = useRef<HTMLDivElement | null>(null);
   const heroTypingRef = useRef<TypingTextHandle | null>(null);
-  const heroTexts = [" Hey There, I'm Tonkla Fullstack Developer"];
+  const heroTexts = [t("hero.title")];
   const heroSpeedMs = 100;
   const heroDelayMs = 800;
 
@@ -48,7 +50,7 @@ export default function Home() {
     };
   }, []);
 
-  // Start typing effect on page load, with optional delay between texts
+  // Start typing effect on page load and when language changes
   useEffect(() => {
     let mounted = true;
     let timeoutId: number | null = null;
@@ -70,8 +72,7 @@ export default function Home() {
       mounted = false;
       if (timeoutId) window.clearTimeout(timeoutId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [lang]);
 
   return (
     <section className={`${geistSans.className} ${geistMono.className} space-y-16`}>
@@ -114,7 +115,7 @@ export default function Home() {
         </div>
         <div className="space-y-6">
           <p className="max-w-md text-zinc-700 dark:text-zinc-300">
-          I build beautifully simple fullstack applications, and I love what I do.
+            {t("hero.subtitle")}
           </p>
           <div>
             <a
@@ -123,11 +124,11 @@ export default function Home() {
               target="_blank"
               rel="noreferrer"
             >
-              Download Resume (PDF)
+              {t("cta.resume")}
             </a>
           </div>
           <div className={`reveal reveal-stagger flex flex-wrap gap-2`}>
-            {["TypeScript", "React", "Next.js", "Node.js", "Tailwind"].map((label, idx) => (
+            {["TypeScript", "Next.js", "Node.js", "Tailwind"].map((label, idx) => (
               <span
                 key={label}
                 style={{ //@ts-ignore

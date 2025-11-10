@@ -1,6 +1,8 @@
 import { contact } from "@/data/resume";
+import { useI18n } from "@/context/i18n";
 
 export default function ContactSection() {
+  const { t } = useI18n();
   return (
     <section
       id="contact"
@@ -10,17 +12,17 @@ export default function ContactSection() {
       //@ts-ignore
       style={{ "--fx-duration": "700ms" }}
     >
-      <h2 className="text-3xl font-semibold">Contact</h2>
+      <h2 className="text-3xl font-semibold">{t("sections.contact")}</h2>
       <div className="rounded-xl border p-6 dark:border-white/10 hover-elevate">
         <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
           <li>
-            <span className="font-medium">Phone:</span>{" "}
+            <span className="font-medium">{t("label.phone")}:</span>{" "}
             <a className="underline tap-press" href={`tel:${contact.phone}`}>
               {contact.phone}
             </a>
           </li>
           <li>
-            <span className="font-medium">Email:</span>{" "}
+            <span className="font-medium">{t("label.email")}:</span>{" "}
             <a className="underline tap-press" href={`mailto:${contact.email}`}>
               {contact.email}
             </a>

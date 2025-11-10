@@ -1,10 +1,12 @@
 import { experiences, resumeProjects, competition } from "@/data/resume";
+import { useI18n } from "@/context/i18n";
 
 function Card({ children }: { children: React.ReactNode }) {
   return <div className="rounded-xl border p-6 dark:border-white/10 hover-elevate tap-press">{children}</div>;
 }
 
 export default function ExperienceSection() {
+  const { t } = useI18n();
   return (
     <section
       id="experience"
@@ -14,17 +16,17 @@ export default function ExperienceSection() {
       //@ts-ignore
       style={{ "--fx-duration": "700ms" }}
     >
-      <h2 className="text-3xl font-semibold">Experience</h2>
+      <h2 className="text-3xl font-semibold">{t("sections.experience")}</h2>
       <div className="space-y-6">
-        {experiences.map((exp) => (
+        {experiences.map((exp, idx) => (
           <Card key={exp.title}>
             <div className="flex items-start justify-between gap-4">
-              <h3 className="text-xl font-medium">{exp.title}</h3>
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">{exp.period}</span>
+              <h3 className="text-xl font-medium">{t(`exp.${idx}.title`)}</h3>
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">{t(`exp.${idx}.period`)}</span>
             </div>
             <ul className="mt-4 space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
-              {exp.bullets.map((b, i) => (
-                <li key={i}>• {b}</li>
+              {exp.bullets.map((_, i) => (
+                <li key={i}>• {t(`exp.${idx}.bullets.${i}`)}</li>
               ))}
             </ul>
           </Card>
@@ -32,29 +34,29 @@ export default function ExperienceSection() {
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-xl font-medium">Projects</h3>
+        <h3 className="text-xl font-medium">{t("sections.projects")}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          {resumeProjects.map((p) => (
+          {resumeProjects.map((p, idx) => (
             <Card key={p.title}>
               <div className="flex items-start justify-between gap-4">
-                <div className="font-medium">{p.title}</div>
-                <span className="text-sm text-zinc-600 dark:text-zinc-400">{p.period}</span>
+                <div className="font-medium">{t(`proj.${idx}.title`)}</div>
+                <span className="text-sm text-zinc-600 dark:text-zinc-400">{t(`proj.${idx}.period`)}</span>
               </div>
-              <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">{p.description}</p>
+              <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">{t(`proj.${idx}.description`)}</p>
             </Card>
           ))}
         </div>
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-xl font-medium">Competition</h3>
+        <h3 className="text-xl font-medium">{t("sections.competition")}</h3>
         <Card>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="font-medium">{competition.title}</div>
-              <div className="text-sm text-zinc-600 dark:text-zinc-400">{competition.note}</div>
+              <div className="font-medium">{t("competition.title")}</div>
+              <div className="text-sm text-zinc-600 dark:text-zinc-400">{t("competition.note")}</div>
             </div>
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">{competition.period}</span>
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">{t("competition.period")}</span>
           </div>
         </Card>
       </div>

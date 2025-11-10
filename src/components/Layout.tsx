@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useI18n } from "@/context/i18n";
 
 function DarkModeToggle() {
   const [enabled, setEnabled] = useState(false);
@@ -54,6 +55,7 @@ function DarkModeToggle() {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const { lang, setLang, t } = useI18n();
   useEffect(() => {
     if (typeof window === "undefined") return;
     const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -102,13 +104,34 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link href="/" className="font-semibold nav-item">Tonkla</Link>
           <nav className="flex items-center gap-4">
-            <Link href="/#about" className="nav-item text-sm">About</Link>
-            <Link href="/#skills" className="nav-item text-sm">Skills</Link>
-            <Link href="/#experience" className="nav-item text-sm">Experience</Link>
-            <Link href="/#education" className="nav-item text-sm">Education</Link>
-            <Link href="/#projects" className="nav-item text-sm">Projects</Link>
-            <Link href="/#contact" className="nav-item text-sm">Contact</Link>
-            <Link href="/Resume-Thanakorn-Wannatong.pdf" className="nav-item text-sm" target="_blank">Resume</Link>
+            <Link href="/#about" className="nav-item text-sm">{t("nav.about")}</Link>
+            <Link href="/#skills" className="nav-item text-sm">{t("nav.skills")}</Link>
+            <Link href="/#experience" className="nav-item text-sm">{t("nav.experience")}</Link>
+            <Link href="/#education" className="nav-item text-sm">{t("nav.education")}</Link>
+            <Link href="/#projects" className="nav-item text-sm">{t("nav.projects")}</Link>
+            <Link href="/#contact" className="nav-item text-sm">{t("nav.contact")}</Link>
+            <Link href="/Resume-Thanakorn-Wannatong.pdf" className="nav-item text-sm" target="_blank">{t("nav.resume")}</Link>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className={`nav-item text-xs px-2 py-1 rounded ${lang === "en" ? "bg-black/5 dark:bg-white/10" : ""}`}
+                onClick={() => setLang("en")}
+                aria-pressed={lang === "en"}
+                title="Switch to English"
+              >
+                {t("lang.en")}
+              </button>
+              <span className="text-zinc-400">/</span>
+              <button
+                type="button"
+                className={`nav-item text-xs px-2 py-1 rounded ${lang === "th" ? "bg-black/5 dark:bg-white/10" : ""}`}
+                onClick={() => setLang("th")}
+                aria-pressed={lang === "th"}
+                title="เปลี่ยนเป็นภาษาไทย"
+              >
+                {t("lang.th")}
+              </button>
+            </div>
             <DarkModeToggle />
           </nav>
         </div>

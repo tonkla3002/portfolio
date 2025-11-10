@@ -1,6 +1,7 @@
 import { technicalSkills } from "@/data/resume";
 import TypingText, { TypingTextHandle } from "@/components/TypingText";
 import { useRef } from "react";
+import { useI18n } from "@/context/i18n";
 
 function Chip({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +13,7 @@ function Chip({ children }: { children: React.ReactNode }) {
 
 export default function SkillsSection() {
   const typingRef = useRef<TypingTextHandle | null>(null);
+  const { t } = useI18n();
   return (
     <section
       id="skills"
@@ -21,34 +23,13 @@ export default function SkillsSection() {
       //@ts-ignore
       style={{ "--fx-duration": "700ms" }}
     >
-      <h2 className="text-3xl font-semibold">Skills</h2>
+      {/* <h2 className="text-3xl font-semibold">Skills</h2>
       <div className="flex items-center gap-3">
-        <TypingText
-          ref={typingRef}
-          text="Technical Skills: TypeScript · React · Next.js · Node.js"
-          speedMs={300}
-          className="text-sm text-zinc-600 dark:text-zinc-400"
-        />
-        <button
-          type="button"
-          onClick={() => typingRef.current?.start()}
-          className="text-xs underline text-zinc-600 dark:text-zinc-400 tap-press"
-          aria-label="Restart typing"
-        >
-          Restart
-        </button>
-        <button
-          type="button"
-          onClick={() => typingRef.current?.reset()}
-          className="text-xs underline text-zinc-600 dark:text-zinc-400 tap-press"
-          aria-label="Reset typing"
-        >
-          Reset
-        </button>
-      </div>
+        Technical Skills: TypeScript · React · Next.js · Node.js
+      </div> */}
       <div className="space-y-6">
         <div>
-          <h3 className="mb-2 text-xl font-medium">Programming Languages</h3>
+          <h3 className="mb-2 text-3xl font-medium">{t("skills.programming")}</h3>
           <div className="flex flex-wrap gap-2">
             {technicalSkills.programmingLanguages.map((s) => (
               <Chip key={s}>{s}</Chip>
@@ -56,7 +37,7 @@ export default function SkillsSection() {
           </div>
         </div>
         <div>
-          <h3 className="mb-2 text-xl font-medium">Frameworks & Libraries</h3>
+          <h3 className="mb-2 text-3xl font-medium">{t("skills.frameworks")}</h3>
           <div className="flex flex-wrap gap-2">
             {technicalSkills.frameworksLibraries.map((s) => (
               <Chip key={s}>{s}</Chip>
@@ -64,7 +45,7 @@ export default function SkillsSection() {
           </div>
         </div>
         <div>
-          <h3 className="mb-2 text-xl font-medium">Database</h3>
+          <h3 className="mb-2 text-3xl font-medium">{t("skills.database")}</h3>
           <div className="flex flex-wrap gap-2">
             {technicalSkills.databases.map((s) => (
               <Chip key={s}>{s}</Chip>
@@ -72,7 +53,7 @@ export default function SkillsSection() {
           </div>
         </div>
         <div>
-          <h3 className="mb-2 text-xl font-medium">Tools</h3>
+          <h3 className="mb-2 text-3xl font-medium">{t("skills.tools")}</h3>
           <div className="flex flex-wrap gap-2">
             {technicalSkills.tools.map((s) => (
               <Chip key={s}>{s}</Chip>
@@ -80,7 +61,7 @@ export default function SkillsSection() {
           </div>
         </div>
         <div>
-          <h3 className="mb-2 text-xl font-medium">Other Skills</h3>
+          <h3 className="mb-2 text-3xl font-medium">{t("skills.other")}</h3>
           <div className="flex flex-wrap gap-2">
             {technicalSkills.other.map((s) => (
               <Chip key={s}>{s}</Chip>
