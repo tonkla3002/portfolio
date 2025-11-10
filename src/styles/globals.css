@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
+/* Make dark: utilities respond to .dark class on html/body */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Animation theme */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 250ms;
+  --duration-medium: 380ms; /* recommended 300–500ms */
+  --duration-slow: 500ms;
 }
 
 @theme inline {
@@ -12,15 +20,195 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Navbar hover effects */
+.nav-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem; /* ~py-1.5 px-3 */
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.3s ease, border-color 0.3s ease;
+  will-change: transform, box-shadow;
+}
+
+.nav-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(120px 60px at 50% 120%, rgba(99, 102, 241, 0.18), transparent 60%);
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-item:hover {
+  background-color: rgba(24, 24, 27, 0.06); /* light mode subtle bg */
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  border-color: rgba(24, 24, 27, 0.15);
+}
+
+.nav-item:hover::before {
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+.dark .nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.08); /* dark mode subtle bg */
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.nav-item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.45);
+}
+
+/* -----------------------------------------------
+   First-scroll experience: color transition, reveal, parallax
+   ----------------------------------------------- */
+.hero-shell {
+  border-radius: 1rem;
+  transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* initial neutral */
+.hero-shell {
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+/* after first scroll: soft gradient and subtle outline */
+.first-scroll .hero-shell {
+  background: linear-gradient(180deg, rgba(99,102,241,0.08), transparent 60%);
+  border-color: rgba(99,102,241,0.2);
+  box-shadow: 0 12px 28px rgba(99,102,241,0.15);
+}
+.dark.first-scroll .hero-shell {
+  background: linear-gradient(180deg, rgba(99,102,241,0.12), transparent 60%);
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.5);
+}
+
+/* Title readability tuning */
+.hero-title {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Balance multi-word title wrapping on small screens */
+.title-balance {
+  text-wrap: balance;
+}
+
+/* Reveal utilities */
+.reveal, .reveal > * {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.first-scroll .reveal, .first-scroll .reveal > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-stagger > * { transition-delay: var(--reveal-delay, 0ms); }
+
+/* Parallax utility: set via --parallax-y variable (in px) */
+.parallax-layer {
+  transform: translateY(var(--parallax-y, 0px));
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+/* -----------------------------------------------
+   Page-wide section reveal & micro-interactions
+   ----------------------------------------------- */
+/* Reveal-on-scroll: attach .section-reveal to section wrappers */
+.section-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--duration-medium) var(--ease-standard),
+    transform var(--duration-medium) var(--ease-standard);
+  will-change: opacity, transform;
+}
+.section-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover elevate: subtle lift & shadow, non-intrusive */
+.hover-elevate {
+  transition:
+    transform var(--duration-medium) var(--ease-standard),
+    box-shadow var(--duration-medium) var(--ease-standard),
+    border-color var(--duration-medium) var(--ease-standard),
+    background-color var(--duration-medium) var(--ease-standard);
+  will-change: transform, box-shadow;
+}
+.hover-elevate:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+.dark .hover-elevate:hover {
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+
+/* Chip micro-interaction: gentle hover lift */
+.ui-chip {
+  transition:
+    transform var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+  will-change: transform, box-shadow;
+}
+.ui-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
+}
+.dark .ui-chip:hover {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* Tap press: tactile feedback on active */
+.tap-press:active {
+  transform: scale(0.98);
+}
+
+/* Accessible motion: respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal,
+  .hover-elevate,
+  .ui-chip,
+  .nav-item,
+  .hero-shell {
+    transition: none !important;
+  }
+  .section-reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
