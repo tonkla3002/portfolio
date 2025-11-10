@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Image from "next/image";
+import TypingText, { TypingTextHandle } from "@/components/TypingText";
 import { useEffect, useRef, useState } from "react";
 import AboutSection from "@/components/sections/AboutSection";
 import SkillsSection from "@/components/sections/SkillsSection";
@@ -14,6 +15,10 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 export default function Home() {
   const [firstScrolled, setFirstScrolled] = useState(false);
   const parallaxRef = useRef<HTMLDivElement | null>(null);
+  const heroTypingRef = useRef<TypingTextHandle | null>(null);
+  const heroTexts = [" Hey There, I'm Tonkla Fullstack Developer"];
+  const heroSpeedMs = 100;
+  const heroDelayMs = 800;
 
   useEffect(() => {
     let triggered = false;
@@ -43,6 +48,31 @@ export default function Home() {
     };
   }, []);
 
+  // Start typing effect on page load, with optional delay between texts
+  useEffect(() => {
+    let mounted = true;
+    let timeoutId: number | null = null;
+
+    const startAt = (index: number) => {
+      if (!mounted) return;
+      heroTypingRef.current?.start(heroTexts[index]);
+      // If multiple texts, schedule next after typing completes + delay
+      if (heroTexts.length > 1) {
+        const current = heroTexts[index];
+        const totalMs = current.length * heroSpeedMs + heroDelayMs;
+        timeoutId = window.setTimeout(() => startAt((index + 1) % heroTexts.length), totalMs);
+      }
+    };
+
+    startAt(0);
+
+    return () => {
+      mounted = false;
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <section className={`${geistSans.className} ${geistMono.className} space-y-16`}>
       {/* Hero */}
@@ -50,7 +80,13 @@ export default function Home() {
         <div className="space-y-6">
           <div className="space-y-3">
             <h1 className="hero-title title-balance text-[clamp(1.5rem,4.3vw,2.75rem)] sm:text-[clamp(1.7rem,4.3vw,3.2rem)] md:text-[clamp(1.9rem,3.4vw,3.4rem)] font-bold leading-tight tracking-tight text-zinc-900 dark:text-zinc-100 md:whitespace-nowrap">
-              Hey There, I’m Tonkla Fullstack Developer
+              <TypingText
+                ref={heroTypingRef}
+                text={heroTexts[0]}
+                speedMs={heroSpeedMs}
+                blink
+                startOnMount={false}
+              />
             </h1>
           </div>
           <div className="flex items-center gap-8">

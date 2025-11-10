@@ -54,6 +54,48 @@ function DarkModeToggle() {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>(".section-reveal"));
+    const fadeNodes = Array.from(document.querySelectorAll<HTMLElement>(".fade-side"));
+
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      nodes.forEach((el) => el.classList.add("is-visible"));
+      fadeNodes.forEach((el) => el.classList.add("is-in"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!(entry.target instanceof HTMLElement)) return;
+          const target = entry.target as HTMLElement;
+          const isFade = target.classList.contains("fade-side");
+          if (entry.isIntersecting) {
+            if (isFade) {
+              target.classList.add("is-in");
+              target.classList.remove("is-out");
+            } else {
+              target.classList.add("is-visible");
+              observer.unobserve(target);
+            }
+          } else if (isFade) {
+            if (target.dataset.fadeOut === "true") {
+              target.classList.add("is-out");
+              target.classList.remove("is-in");
+            }
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
+    );
+
+    nodes.forEach((el) => observer.observe(el));
+    fadeNodes.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-800 dark:bg-black dark:text-zinc-100">
       <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur dark:border-white/10 dark:bg-black/60">

@@ -128,7 +128,7 @@ html {
 .reveal, .reveal > * {
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  transition: opacity var(--duration-slow) var(--ease-standard), transform var(--duration-slow) var(--ease-standard);
 }
 .first-scroll .reveal, .first-scroll .reveal > * {
   opacity: 1;
@@ -151,14 +151,38 @@ html {
   opacity: 0;
   transform: translateY(12px);
   transition:
-    opacity var(--duration-medium) var(--ease-standard),
-    transform var(--duration-medium) var(--ease-standard);
+    opacity var(--duration-slow) var(--ease-standard),
+    transform var(--duration-slow) var(--ease-standard);
   will-change: opacity, transform;
 }
 .section-reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Directional fade-in/out from screen sides */
+.fade-side {
+  /* configurable */
+  --fx-duration: 600ms; /* adjust per-element e.g. 700ms, 900ms */
+  opacity: 0;
+  transform: translate3d(var(--fx-x, 0px), var(--fx-y, 0px), 0);
+  transition:
+    opacity var(--fx-duration) var(--ease-standard),
+    transform var(--fx-duration) var(--ease-standard);
+  will-change: opacity, transform;
+}
+.fade-side.is-in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.fade-side.is-out {
+  opacity: 0;
+  transform: translate3d(var(--fx-x, 0px), var(--fx-y, 0px), 0);
+}
+.fade-side[data-direction="left"] { --fx-x: -24px; --fx-y: 0px; }
+.fade-side[data-direction="right"] { --fx-x: 24px; --fx-y: 0px; }
+.fade-side[data-direction="top"] { --fx-x: 0px; --fx-y: -24px; }
+.fade-side[data-direction="bottom"] { --fx-x: 0px; --fx-y: 24px; }
 
 /* Card hover elevate: subtle lift & shadow, non-intrusive */
 .hover-elevate {
@@ -198,17 +222,40 @@ html {
   transform: scale(0.98);
 }
 
+/* Typing cursor blink */
+.typing-cursor {
+  display: inline-block;
+  width: 1ch;
+  margin-left: 2px;
+  color: currentColor;
+  animation: cursor-blink 1s steps(1, end) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 /* Accessible motion: respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .section-reveal,
+  .reveal,
   .hover-elevate,
   .ui-chip,
   .nav-item,
   .hero-shell {
     transition: none !important;
   }
+  .typing-cursor { animation: none !important; }
   .section-reveal {
     opacity: 1;
     transform: none;
+  }
+  .reveal, .reveal > * {
+    opacity: 1;
+    transform: none;
+  }
+  .fade-side {
+    transition: none !important;
   }
 }

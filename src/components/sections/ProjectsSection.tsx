@@ -12,7 +12,14 @@ export default function ProjectsSection() {
   ].filter(Boolean) as { title: string; period?: string; description?: string }[];
 
   return (
-    <section id="projects" className="scroll-mt-24 space-y-6 section-reveal">
+    <section
+      id="projects"
+      className="scroll-mt-24 space-y-6 section-reveal fade-side"
+      data-direction="left"
+      data-fade-out="true"
+      //@ts-ignore
+      style={{ "--fx-duration": "700ms" }}
+    >
       <h2 className="text-3xl font-semibold">Projects</h2>
       <div className="grid gap-4 sm:grid-cols-2">
         {all.map((p) => (

@@ -6,7 +6,14 @@ function Card({ children }: { children: React.ReactNode }) {
 
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="scroll-mt-24 space-y-10 section-reveal">
+    <section
+      id="experience"
+      className="scroll-mt-24 space-y-10 section-reveal fade-side"
+      data-direction="left"
+      data-fade-out="true"
+      //@ts-ignore
+      style={{ "--fx-duration": "700ms" }}
+    >
       <h2 className="text-3xl font-semibold">Experience</h2>
       <div className="space-y-6">
         {experiences.map((exp) => (
