@@ -10,6 +10,7 @@ export type Dict = Record<string, string>;
 type I18nValue = {
   lang: Lang;
   setLang: (next: Lang) => void;
+  clearLang: () => void;
   t: (key: string) => string;
 };
 
@@ -53,9 +54,19 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     [router]
   );
 
+  const clearLang = useCallback(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("lang");
+    }
+    const next: Lang = "en"; // fallback to default language
+    setLangState(next);
+    const query = { ...router.query, lang: next };
+    router.replace({ pathname: router.pathname, query }, undefined, { shallow: true });
+  }, [router]);
+
   const t = useCallback((key: string) => dict[key] ?? key, [dict]);
 
-  const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
+  const value = useMemo(() => ({ lang, setLang, clearLang, t }), [lang, setLang, clearLang, t]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

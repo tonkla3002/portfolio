@@ -55,7 +55,7 @@ function DarkModeToggle() {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { lang, setLang, t } = useI18n();
+  const { lang, setLang, t, clearLang } = useI18n();
   useEffect(() => {
     if (typeof window === "undefined") return;
     const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -114,22 +114,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className={`nav-item text-xs px-2 py-1 rounded ${lang === "en" ? "bg-black/5 dark:bg-white/10" : ""}`}
-                onClick={() => setLang("en")}
-                aria-pressed={lang === "en"}
-                title="Switch to English"
-              >
-                {t("lang.en")}
-              </button>
-              <span className="text-zinc-400">/</span>
-              <button
-                type="button"
                 className={`nav-item text-xs px-2 py-1 rounded ${lang === "th" ? "bg-black/5 dark:bg-white/10" : ""}`}
-                onClick={() => setLang("th")}
+                onClick={(e) => {
+                  if (e.altKey || e.metaKey) { clearLang(); return; }
+                  const next = lang === "th" ? "en" : "th";
+                  setLang(next);
+                }}
                 aria-pressed={lang === "th"}
-                title="เปลี่ยนเป็นภาษาไทย"
+                aria-label={lang === "th" ? "Switch to English" : "เปลี่ยนเป็นภาษาไทย"}
+                title={lang === "th" ? "Switch to English (Alt/⌥-click to clear)" : "เปลี่ยนเป็นภาษาไทย (Alt/⌥-คลิกเพื่อล้างค่า)"}
+                data-current-lang={lang}
               >
-                {t("lang.th")}
+                {lang === "th" ? t("lang.en") : t("lang.th")}
               </button>
             </div>
             <DarkModeToggle />
