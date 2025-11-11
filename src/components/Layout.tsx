@@ -107,8 +107,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link href="/#about" className="nav-item text-sm">{t("nav.about")}</Link>
             <Link href="/#skills" className="nav-item text-sm">{t("nav.skills")}</Link>
             <Link href="/#experience" className="nav-item text-sm">{t("nav.experience")}</Link>
-            <Link href="/#education" className="nav-item text-sm">{t("nav.education")}</Link>
             <Link href="/#projects" className="nav-item text-sm">{t("nav.projects")}</Link>
+            <Link href="/#education" className="nav-item text-sm">{t("nav.education")}</Link>
             <Link href="/#contact" className="nav-item text-sm">{t("nav.contact")}</Link>
             <Link href="/Resume-Thanakorn-Wannatong.pdf" className="nav-item text-sm" target="_blank">{t("nav.resume")}</Link>
             <div className="flex items-center gap-2">

@@ -16,7 +16,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  /* Prefer Geist but fall back to Thai-capable font variable when needed */
+  --font-sans: var(--font-geist-sans), var(--font-noto-thai);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -28,7 +29,8 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  /* Add Thai font variable fallback right after Geist to avoid mis-rendered characters */
+  font-family: var(--font-geist-sans), var(--font-noto-thai), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -117,6 +119,9 @@ html {
 .hero-title {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  /* Prevent ligature/stylistic substitutions that may alter letter pairs */
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
 }
 
 /* Balance multi-word title wrapping on small screens */
@@ -225,8 +230,9 @@ html {
 /* Typing cursor blink */
 .typing-cursor {
   display: inline-block;
-  width: 1ch;
-  margin-left: 2px;
+  /* Keep cursor narrow and non-overlapping with preceding glyphs */
+  width: 0.6ch;
+  margin-left: 0.1em;
   color: currentColor;
   animation: cursor-blink 1s steps(1, end) infinite;
 }
@@ -258,4 +264,31 @@ html {
   .fade-side {
     transition: none !important;
   }
+}
+
+/* -----------------------------------------------
+   Swiper theming & smooth transitions
+   ----------------------------------------------- */
+.swiper {
+  padding-bottom: 26px; /* room for pagination */
+}
+.swiper-slide {
+  transition: transform var(--duration-medium) var(--ease-standard),
+    box-shadow var(--duration-medium) var(--ease-standard);
+}
+.swiper-slide:hover {
+  transform: translateY(-2px);
+}
+.swiper-button-next, .swiper-button-prev {
+  color: var(--foreground);
+}
+.dark .swiper-button-next, .dark .swiper-button-prev {
+  color: #fff;
+}
+.swiper-pagination-bullet {
+  background: var(--foreground);
+  opacity: 0.4;
+}
+.swiper-pagination-bullet-active {
+  opacity: 1;
 }

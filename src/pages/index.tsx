@@ -11,7 +11,10 @@ import ProjectsSection from "@/components/sections/ProjectsSection";
 import ContactSection from "@/components/sections/ContactSection";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export default function Home() {
   const { lang, t } = useI18n();
@@ -62,7 +65,10 @@ export default function Home() {
       if (heroTexts.length > 1) {
         const current = heroTexts[index];
         const totalMs = current.length * heroSpeedMs + heroDelayMs;
-        timeoutId = window.setTimeout(() => startAt((index + 1) % heroTexts.length), totalMs);
+        timeoutId = window.setTimeout(
+          () => startAt((index + 1) % heroTexts.length),
+          totalMs
+        );
       }
     };
 
@@ -75,31 +81,29 @@ export default function Home() {
   }, [lang]);
 
   return (
-    <section className={`${geistSans.className} ${geistMono.className} space-y-16`}>
+    <section
+      className={`${geistSans.className} ${geistMono.className} space-y-16`}
+    >
       {/* Hero */}
-      <div className="mx-auto w-full max-w-5xl grid items-center gap-10 sm:grid-cols-2 hero-shell p-6 sm:p-8">
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h1 className="hero-title title-balance text-[clamp(1.5rem,4.3vw,2.75rem)] sm:text-[clamp(1.7rem,4.3vw,3.2rem)] md:text-[clamp(1.9rem,3.4vw,3.4rem)] font-bold leading-tight tracking-tight text-zinc-900 dark:text-zinc-100 md:whitespace-nowrap">
-              <TypingText
-                ref={heroTypingRef}
-                text={heroTexts[0]}
-                speedMs={heroSpeedMs}
-                blink
-                startOnMount={false}
-              />
-            </h1>
-          </div>
-          <div className="flex items-center gap-8">
-            {/* <div className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">10</div>
-            <div className="text-sm text-zinc-600 dark:text-zinc-400">YEARS
-              <br />
-              EXPERIENCE
-            </div> */}
-          </div>
+      {/* Hero Section */}
+      <div className="mx-auto w-full max-w-5xl grid grid-cols-1 place-items-center gap-10 md:gap-12 hero-shell p-6 sm:p-8 min-h-[70vh]">
+        {/* Left column: Title */}
+        <div className="w-full space-y-3 text-center">
+          <h1 className="hero-title title-balance text-[clamp(1.5rem,4.3vw,2.75rem)] sm:text-[clamp(1.7rem,4.3vw,3.2rem)] md:text-[clamp(1.9rem,3.4vw,3.4rem)] font-bold leading-tight tracking-tight text-zinc-900 dark:text-zinc-100 md:whitespace-nowrap">
+            <TypingText
+              ref={heroTypingRef}
+              text={heroTexts[0]}
+              speedMs={heroSpeedMs}
+              blink
+              startOnMount={false}
+            />
+          </h1>
+        </div>
 
-          {/* Avatar + brush background with parallax */}
-          <div className="relative mt-4" ref={parallaxRef}>
+        {/* Right column: Avatar & Content */}
+        <div className="w-full grid gap-8 sm:gap-10 sm:grid-cols-2 items-center justify-items-center sm:justify-items-center">
+          {/* Avatar with parallax background */}
+          <div className="relative place-self-center" ref={parallaxRef}>
             <div className="absolute -inset-6 -z-10 bg-[url('/file.svg')] bg-center bg-no-repeat opacity-25 dark:opacity-20 parallax-layer" />
             <div className="relative h-[17.6rem] w-[13.2rem] overflow-hidden rounded-3xl border border-zinc-200 dark:border-zinc-700">
               <Image
@@ -107,42 +111,49 @@ export default function Home() {
                 alt="Tonkla"
                 fill
                 sizes="212px"
-                className="object-cover"
+                className="object-cover object-center"
                 priority
               />
             </div>
           </div>
-        </div>
-        <div className="space-y-6">
-          <p className="max-w-md text-zinc-700 dark:text-zinc-300">
-            {t("hero.subtitle")}
-          </p>
-          <div>
-            <a
-              href="/Resume-Thanakorn-Wannatong.pdf"
-              className="inline-flex items-center rounded-full border px-4 py-2 text-sm bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/15 border-zinc-200 dark:border-white/10 backdrop-blur transition-colors tap-press"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {t("cta.resume")}
-            </a>
-          </div>
-          <div className={`reveal reveal-stagger flex flex-wrap gap-2`}>
-            {["TypeScript", "Next.js", "Node.js", "Tailwind"].map((label, idx) => (
-              <span
-                key={label}
-                style={{ //@ts-ignore
-                  "--reveal-delay": `${idx * 60}ms`,
-                }}
-                className="rounded-full border border-transparent bg-black/5 dark:bg-white/5 px-3 py-1 text-xs text-zinc-700 dark:text-zinc-300"
+
+          {/* Text & Tags */}
+          <div className="space-y-6 text-center">
+            <p className="max-w-md mx-auto text-zinc-700 dark:text-zinc-300">
+              {t("hero.subtitle")}
+            </p>
+
+            {/* Resume Button */}
+            <div className="flex justify-center">
+              <a
+                href="/Resume-Thanakorn-Wannatong.pdf"
+                className="inline-flex items-center rounded-full border px-4 py-2 text-sm bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/15 border-zinc-200 dark:border-white/10 backdrop-blur transition-colors tap-press"
+                target="_blank"
+                rel="noreferrer"
               >
-                {label}
-              </span>
-            ))}
+                {t("cta.resume")}
+              </a>
+            </div>
+
+            {/* Tech Tags */}
+            <div className="reveal reveal-stagger flex flex-wrap gap-2 justify-center">
+              {["Nest.js", "Next.js", "Express.js", "Tailwind"].map((label, idx) => (
+                <span
+                  key={label}
+                  style={{
+                    //@ts-ignore
+                    "--reveal-delay": `${idx * 60}ms`,
+                  }}
+                  className="rounded-full border border-transparent bg-black/5 dark:bg-white/5 px-3 py-1 text-xs text-zinc-700 dark:text-zinc-300"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
           </div>
-          
         </div>
       </div>
+
 
       {/* Services + What do I help removed per request */}
 

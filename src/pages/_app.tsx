@@ -1,4 +1,8 @@
 import "@/styles/globals.css";
+// Swiper global styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import type { AppProps } from "next/app";
 import Layout from "@/components/Layout";
 import { I18nProvider } from "@/context/i18n";
