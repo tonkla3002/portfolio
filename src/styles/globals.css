@@ -117,7 +117,7 @@ body {
 /* Thai stacks tone marks above the cap height, so it needs more leading,
    and each hero line stays on one line (no word spaces to wrap on). */
 :lang(th) .hero-title {
-  font-size: clamp(2.2rem, 4.9vw, 5.25rem);
+  font-size: clamp(2rem, 3.8vw, 3.75rem);
   line-height: 1.22;
 }
 :lang(th) .hero-title .rise > span { white-space: nowrap; }

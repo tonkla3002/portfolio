@@ -17,16 +17,16 @@ function StackBand() {
     <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
       {BAND.map((s) => (
         <li key={s} className="flex items-center">
-          <span className="display px-8 text-5xl leading-none sm:text-7xl">
+          <span className="display px-8 text-4xl leading-none sm:text-5xl">
             <span className="latin">{s}</span>
           </span>
-          <span className="text-3xl text-accent" aria-hidden>✳</span>
+          <span className="text-2xl text-accent" aria-hidden>✳</span>
         </li>
       ))}
     </ul>
   );
   return (
-    <div className="marquee relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-ink py-10 text-paper">
+    <div className="marquee relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-ink py-7 text-paper">
       <div className="marquee-track">
         {row(false)}
         {row(true)}

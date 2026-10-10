@@ -15,7 +15,7 @@ export default function Section({ id, index, title, children }: SectionProps) {
     >
       <div className="md:sticky md:top-28 md:self-start">
         <div className="label text-accent">{index}</div>
-        <h2 id={`${id}-title`} className="display mt-2 text-4xl leading-tight sm:text-5xl">
+        <h2 id={`${id}-title`} className="display mt-2 text-3xl leading-tight sm:text-4xl">
           {title}
         </h2>
       </div>

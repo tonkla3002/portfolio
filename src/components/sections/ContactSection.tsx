@@ -7,20 +7,20 @@ export default function ContactSection() {
   return (
     <section id="contact" aria-labelledby="contact-title" className="scroll-mt-20 border-t border-line pt-20 pb-12 md:pt-28">
       <div className="label text-accent">06 — {t("sections.contact")}</div>
-      <h2 id="contact-title" className="display mt-4 text-[clamp(3rem,9vw,9rem)] leading-[0.95]">
+      <h2 id="contact-title" className="display mt-4 text-[clamp(2.5rem,5.5vw,5rem)] leading-[1]">
         {t("contact.heading")}
       </h2>
-      <p className="mt-6 max-w-xl text-[1.2rem] leading-relaxed text-muted">{t("contact.lead")}</p>
+      <p className="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-muted">{t("contact.lead")}</p>
 
       <a
         href={`mailto:${contact.email}`}
         className="group mt-12 flex items-center justify-between gap-6 border-y border-line py-8 transition-colors hover:text-accent"
       >
-        <span className="display min-w-0 break-words text-[clamp(1.6rem,4.4vw,4.25rem)] leading-tight">
+        <span className="display min-w-0 break-words text-[clamp(1.25rem,2.8vw,2.5rem)] leading-tight">
           <span className="latin">{email}</span>
         </span>
         <span
-          className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-current text-2xl transition-transform duration-300 group-hover:-rotate-45 sm:h-20 sm:w-20"
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-current text-2xl transition-transform duration-300 group-hover:-rotate-45 sm:h-16 sm:w-16"
           aria-hidden
         >
           →

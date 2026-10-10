@@ -13,7 +13,7 @@ export default function EducationSection() {
         {rows.map((r) => (
           <li key={r.title}>
             <div className="label text-accent">{r.period}</div>
-            <h3 className="mt-2 text-[1.35rem] font-semibold leading-snug">{r.title}</h3>
+            <h3 className="mt-2 text-[1.2rem] font-semibold leading-snug">{r.title}</h3>
             <p className="mt-2 text-[1.0625rem] leading-relaxed text-muted">{r.note}</p>
           </li>
         ))}

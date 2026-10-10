@@ -10,7 +10,7 @@ export default function ExperienceSection() {
         {experiences.map((exp, idx) => (
           <li key={exp.title} className="max-w-3xl">
             <div className="label text-accent">{t(`exp.${idx}.period`)}</div>
-            <h3 className="mt-2 text-[1.35rem] font-semibold leading-snug sm:text-2xl">{t(`exp.${idx}.title`)}</h3>
+            <h3 className="mt-2 text-[1.2rem] font-semibold leading-snug sm:text-[1.3rem]">{t(`exp.${idx}.title`)}</h3>
             <ul className="mt-5 space-y-3 text-[1.0625rem] leading-[1.75] text-muted">
               {exp.bullets.map((_, i) => (
                 <li key={i} className="relative pl-6">

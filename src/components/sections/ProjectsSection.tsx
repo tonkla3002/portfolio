@@ -50,7 +50,7 @@ export default function ProjectsSection() {
               </span>
               <span className="label text-muted transition-colors group-hover:text-paper/70">{t(p.periodKey)}</span>
             </div>
-            <h3 className="display mt-4 max-w-[22ch] text-[2rem] leading-[1.1] sm:text-[2.6rem]">{t(p.titleKey)}</h3>
+            <h3 className="display mt-4 max-w-[28ch] text-[1.6rem] leading-[1.15] sm:text-[2rem]">{t(p.titleKey)}</h3>
             <p className="mt-4 max-w-[60ch] text-[1.0625rem] leading-[1.75] text-muted transition-colors group-hover:text-paper/80">
               {t(p.descKey)}
             </p>

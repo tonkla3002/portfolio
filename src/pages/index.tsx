@@ -57,15 +57,9 @@ function Hero() {
           <div className="fade-in label text-accent" style={{ ["--d" as string]: "60ms" }}>
             Thanakorn Wannatong — &ldquo;Tonkla&rdquo;
           </div>
-          <h1 className="hero-title display mt-5 text-[clamp(2.6rem,6.4vw,6.5rem)] leading-[0.98]">
+          <h1 className="hero-title display mt-5 text-[clamp(2.25rem,4.6vw,4.5rem)] leading-[1.02]">
             <span className="rise"><span style={{ ["--d" as string]: "120ms" }}>{t("hero.l1")}</span></span>
           </h1>
-          <p
-            className="fade-in mt-6 max-w-[34ch] text-[1.2rem] leading-relaxed text-muted sm:text-[1.35rem]"
-            style={{ ["--d" as string]: "400ms" }}
-          >
-            {t("hero.subtitle")}
-          </p>
         </div>
 
         <div className="fade-in order-1 md:order-2 md:justify-self-end" style={{ ["--d" as string]: "200ms" }}>
