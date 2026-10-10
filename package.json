@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "export": "next build && next export",
+    "export": "next build",
     "backup": "node scripts/rollback/backup.js",
     "restore": "node scripts/rollback/restore.js"
   },
