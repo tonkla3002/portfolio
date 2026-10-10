@@ -24,10 +24,16 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   const dict = useMemo(() => dictionaries[lang], [lang]);
 
+  // Keep <html lang> in sync so screen readers and :lang() styles follow the UI language.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   useEffect(() => {
     let initial: Lang = "en";
-    const q = router.query?.lang;
-    const fromQuery = Array.isArray(q) ? q[0] : q;
+    // router.query is empty on the first render of a statically exported page,
+    // so read the language straight from the URL.
+    const fromQuery = new URLSearchParams(window.location.search).get("lang") ?? undefined;
     if (fromQuery === "th" || fromQuery === "en") {
       initial = fromQuery;
     } else if (typeof window !== "undefined") {

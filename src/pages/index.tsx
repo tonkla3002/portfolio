@@ -1,171 +1,127 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import Image from "next/image";
-import TypingText, { TypingTextHandle } from "@/components/TypingText";
+import { useEffect, useState } from "react";
 import { useI18n } from "@/context/i18n";
-import { useEffect, useRef, useState } from "react";
+import { LangSwitch, ThemeToggle } from "@/components/Controls";
 import AboutSection from "@/components/sections/AboutSection";
-import SkillsSection from "@/components/sections/SkillsSection";
 import ExperienceSection from "@/components/sections/ExperienceSection";
-import EducationSection from "@/components/sections/EducationSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
+import SkillsSection from "@/components/sections/SkillsSection";
+import EducationSection from "@/components/sections/EducationSection";
 import ContactSection from "@/components/sections/ContactSection";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const NAV = ["about", "experience", "projects", "skills", "contact"] as const;
 
-export default function Home() {
-  const { lang, t } = useI18n();
-  const [firstScrolled, setFirstScrolled] = useState(false);
-  const parallaxRef = useRef<HTMLDivElement | null>(null);
-  const heroTypingRef = useRef<TypingTextHandle | null>(null);
-  const heroTexts = [t("hero.title")];
-  const heroSpeedMs = 100;
-  const heroDelayMs = 800;
-
+function TopBar() {
+  const { t } = useI18n();
+  const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    let triggered = false;
-    const onScroll = () => {
-      if (!triggered && window.scrollY > 10) {
-        triggered = true;
-        setFirstScrolled(true);
-        document.body.classList.add("first-scroll");
-        window.removeEventListener("scroll", onScroll);
-      }
-    };
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-
-    let rafId = 0;
-    const loop = () => {
-      const y = Math.min(30, window.scrollY * 0.06);
-      if (parallaxRef.current) {
-        parallaxRef.current.style.setProperty("--parallax-y", `${y}px`);
-      }
-      rafId = requestAnimationFrame(loop);
-    };
-    rafId = requestAnimationFrame(loop);
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(rafId);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Start typing effect on page load and when language changes
-  useEffect(() => {
-    let mounted = true;
-    let timeoutId: number | null = null;
-
-    const startAt = (index: number) => {
-      if (!mounted) return;
-      heroTypingRef.current?.start(heroTexts[index]);
-      // If multiple texts, schedule next after typing completes + delay
-      if (heroTexts.length > 1) {
-        const current = heroTexts[index];
-        const totalMs = current.length * heroSpeedMs + heroDelayMs;
-        timeoutId = window.setTimeout(
-          () => startAt((index + 1) % heroTexts.length),
-          totalMs
-        );
-      }
-    };
-
-    startAt(0);
-
-    return () => {
-      mounted = false;
-      if (timeoutId) window.clearTimeout(timeoutId);
-    };
-  }, [lang]);
-
   return (
-    <section
-      className={`${geistSans.className} ${geistMono.className} space-y-16`}
+    <header
+      className={
+        "sticky top-0 z-40 transition-colors duration-300 " +
+        (scrolled ? "border-b border-line bg-paper/85 backdrop-blur-md" : "border-b border-transparent")
+      }
     >
-      {/* Hero */}
-      {/* Hero Section */}
-      <div className="mx-auto w-full max-w-5xl grid grid-cols-1 place-items-center gap-10 md:gap-12 hero-shell p-6 sm:p-8 min-h-[70vh]">
-        {/* Left column: Title */}
-        <div className="w-full space-y-3 text-center">
-          <h1 className="hero-title title-balance text-[clamp(1.5rem,4.3vw,2.75rem)] sm:text-[clamp(1.7rem,4.3vw,3.2rem)] md:text-[clamp(1.9rem,3.4vw,3.4rem)] font-bold leading-tight tracking-tight text-zinc-900 dark:text-zinc-100 md:whitespace-nowrap">
-            <TypingText
-              ref={heroTypingRef}
-              text={heroTexts[0]}
-              speedMs={heroSpeedMs}
-              blink
-              startOnMount={false}
-            />
+      <div className="mx-auto flex h-16 max-w-[90rem] items-center justify-between px-5 sm:px-10">
+        <a href="#top" className="display text-2xl leading-none">
+          <span className="latin">Thanakorn W.</span>
+        </a>
+        <nav aria-label="Sections" className="hidden items-center gap-8 md:flex">
+          {NAV.map((id) => (
+            <a key={id} href={`#${id}`} className="link-underline text-[0.95rem] text-muted hover:text-ink">
+              {t(`nav.${id}`)}
+            </a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-5">
+          <LangSwitch />
+          <ThemeToggle />
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function Hero() {
+  const { t } = useI18n();
+  return (
+    <section id="top" className="flex flex-col justify-between pt-10 pb-16 sm:pt-14 lg:min-h-[calc(100svh-4rem)] lg:pb-10">
+      <div className="grid items-end gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-16">
+        <div className="order-2 md:order-1">
+          <div className="fade-in label text-accent" style={{ ["--d" as string]: "60ms" }}>
+            Thanakorn Wannatong — &ldquo;Tonkla&rdquo;
+          </div>
+          <h1 className="hero-title display mt-5 text-[clamp(2.6rem,6.4vw,6.5rem)] leading-[0.98]">
+            <span className="rise"><span style={{ ["--d" as string]: "120ms" }}>{t("hero.l1")}</span></span>
           </h1>
+          <p
+            className="fade-in mt-6 max-w-[34ch] text-[1.2rem] leading-relaxed text-muted sm:text-[1.35rem]"
+            style={{ ["--d" as string]: "400ms" }}
+          >
+            {t("hero.subtitle")}
+          </p>
         </div>
 
-        {/* Right column: Avatar & Content */}
-        <div className="w-full grid gap-8 sm:gap-10 sm:grid-cols-2 items-center justify-items-center sm:justify-items-center">
-          {/* Avatar with parallax background */}
-          <div className="relative place-self-center" ref={parallaxRef}>
-            <div className="absolute -inset-6 -z-10 bg-[url('/file.svg')] bg-center bg-no-repeat opacity-25 dark:opacity-20 parallax-layer" />
-            <div className="relative h-[17.6rem] w-[13.2rem] overflow-hidden rounded-3xl border border-zinc-200 dark:border-zinc-700">
-              <Image
-                src="/profile.jpg"
-                alt="Tonkla"
-                fill
-                sizes="212px"
-                className="object-cover object-center"
-                priority
-              />
-            </div>
-          </div>
-
-          {/* Text & Tags */}
-          <div className="space-y-6 text-center">
-            <p className="max-w-md mx-auto text-zinc-700 dark:text-zinc-300">
-              {t("hero.subtitle")}
-            </p>
-
-            {/* Resume Button */}
-            <div className="flex justify-center">
-              <a
-                href="/Resume-Thanakorn-Wannatong.pdf"
-                className="inline-flex items-center rounded-full border px-4 py-2 text-sm bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/15 border-zinc-200 dark:border-white/10 backdrop-blur transition-colors tap-press"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t("cta.resume")}
-              </a>
-            </div>
-
-            {/* Tech Tags */}
-            <div className="reveal reveal-stagger flex flex-wrap gap-2 justify-center">
-              {["Nest.js", "Next.js", "Express.js", "Tailwind"].map((label, idx) => (
-                <span
-                  key={label}
-                  style={{
-                    //@ts-ignore
-                    "--reveal-delay": `${idx * 60}ms`,
-                  }}
-                  className="rounded-full border border-transparent bg-black/5 dark:bg-white/5 px-3 py-1 text-xs text-zinc-700 dark:text-zinc-300"
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
+        <div className="fade-in order-1 md:order-2 md:justify-self-end" style={{ ["--d" as string]: "200ms" }}>
+          <div className="relative aspect-[4/5] w-full max-w-[22rem] overflow-hidden rounded-[1.75rem] bg-line sm:max-w-[26rem] md:w-[min(30vw,28rem)] md:max-w-none">
+            <Image
+              src="/profile-web.jpg"
+              alt="Thanakorn Wannatong"
+              fill
+              sizes="(min-width: 768px) 28rem, 90vw"
+              className="object-cover object-[50%_20%]"
+              priority
+            />
           </div>
         </div>
       </div>
 
-
-      {/* Services + What do I help removed per request */}
-
-      {/* Single-page sections below */}
-      <div className="mx-auto w-full max-w-5xl space-y-16">
-        <AboutSection />
-        <SkillsSection />
-        <ExperienceSection />
-        <ProjectsSection />
-        <EducationSection />
-        <ContactSection />
+      <div
+        className="fade-in mt-14 grid gap-6 border-t border-line pt-6 sm:grid-cols-2 lg:grid-cols-4"
+        style={{ ["--d" as string]: "700ms" }}
+      >
+        <div>
+          <div className="label text-muted">{t("hero.now")}</div>
+          <p className="mt-1.5 leading-snug">{t("hero.position")}</p>
+        </div>
+        <div>
+          <div className="label text-muted">{t("hero.stack")}</div>
+          <p className="mt-1.5 leading-snug">NestJS · Go Fiber · Next.js · PostgreSQL</p>
+        </div>
+        <div>
+          <div className="label text-muted">{t("hero.edu")}</div>
+          <p className="mt-1.5 leading-snug">{t("hero.eduValue")}</p>
+        </div>
+        <a href="#about" className="group hidden items-end justify-end gap-3 lg:flex">
+          <span className="label text-muted transition-colors group-hover:text-ink">{t("hero.scroll")}</span>
+          <span className="grid h-10 w-10 place-items-center rounded-full border border-line transition-colors group-hover:border-ink group-hover:bg-ink group-hover:text-paper">
+            ↓
+          </span>
+        </a>
       </div>
     </section>
+  );
+}
+
+export default function Home() {
+  return (
+    <>
+      <TopBar />
+      <main id="content" className="mx-auto max-w-[90rem] overflow-x-clip px-5 sm:px-10">
+        <Hero />
+        <AboutSection />
+        <ExperienceSection />
+        <ProjectsSection />
+        <SkillsSection />
+        <EducationSection />
+        <ContactSection />
+      </main>
+    </>
   );
 }

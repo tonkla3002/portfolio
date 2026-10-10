@@ -8,7 +8,7 @@ const projects: Project[] = [
     title: "Senior Project",
     description:
       "Temperature & current standards testing system: Electron.js gateway, PostgreSQL storage, Next.js dashboard.",
-    period: experiences[0].period,
+    period: experiences[2].period,
   },
   ...resumeProjects.map((p) => ({ title: p.title, description: p.description, period: p.period })),
 ];
@@ -28,7 +28,7 @@ export default function Projects() {
             <div className="flex items-start justify-between gap-4">
               <h2 className="text-lg font-medium">
                 {(() => {
-                  if (p.title === "Senior Project") return t("exp.0.title");
+                  if (p.title === "Senior Project") return t("exp.2.title");
                   const rpIdx = resumeProjects.findIndex((rp) => rp.title === p.title);
                   if (rpIdx >= 0) return t(`proj.${rpIdx}.title`);
                   return p.title;
@@ -37,7 +37,7 @@ export default function Projects() {
               {p.period && (
                 <span className="text-xs text-zinc-600 dark:text-zinc-400">
                   {(() => {
-                    if (p.title === "Senior Project") return t("exp.0.period");
+                    if (p.title === "Senior Project") return t("exp.2.period");
                     const rpIdx = resumeProjects.findIndex((rp) => rp.period === p.period && rp.title === p.title);
                     if (rpIdx >= 0) return t(`proj.${rpIdx}.period`);
                     return p.period;
@@ -47,7 +47,7 @@ export default function Projects() {
             </div>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
               {(() => {
-                if (p.title === "Senior Project") return t("exp.0.bullets.0");
+                if (p.title === "Senior Project") return t("exp.2.bullets.0");
                 const rpIdx = resumeProjects.findIndex((rp) => rp.description === p.description && rp.title === p.title);
                 if (rpIdx >= 0) return t(`proj.${rpIdx}.description`);
                 return p.description;

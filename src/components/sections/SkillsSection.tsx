@@ -1,74 +1,62 @@
 import { technicalSkills } from "@/data/resume";
-import TypingText, { TypingTextHandle } from "@/components/TypingText";
-import { useRef } from "react";
 import { useI18n } from "@/context/i18n";
+import Section from "@/components/SectionHeading";
 
-function Chip({ children }: { children: React.ReactNode }) {
+const GROUPS = [
+  { key: "skills.programming", items: technicalSkills.programmingLanguages },
+  { key: "skills.frameworks", items: technicalSkills.frameworksLibraries },
+  { key: "skills.database", items: technicalSkills.databases },
+  { key: "skills.tools", items: technicalSkills.tools },
+  { key: "skills.other", items: technicalSkills.other },
+];
+
+const BAND = ["NestJS", "Go Fiber", "Next.js", "PostgreSQL", "TypeScript", "GORM", "Docker", "MongoDB"];
+
+function StackBand() {
+  const row = (hidden: boolean) => (
+    <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
+      {BAND.map((s) => (
+        <li key={s} className="flex items-center">
+          <span className="display px-8 text-5xl leading-none sm:text-7xl">
+            <span className="latin">{s}</span>
+          </span>
+          <span className="text-3xl text-accent" aria-hidden>✳</span>
+        </li>
+      ))}
+    </ul>
+  );
   return (
-    <span className="inline-block rounded-full border px-3 py-1 text-sm text-zinc-700 dark:border-white/10 dark:text-zinc-300 ui-chip tap-press">
-      {children}
-    </span>
+    <div className="marquee relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-ink py-10 text-paper">
+      <div className="marquee-track">
+        {row(false)}
+        {row(true)}
+      </div>
+    </div>
   );
 }
 
 export default function SkillsSection() {
-  const typingRef = useRef<TypingTextHandle | null>(null);
   const { t } = useI18n();
   return (
-    <section
-      id="skills"
-      className="scroll-mt-24 space-y-8 section-reveal fade-side"
-      data-direction="left"
-      data-fade-out="true"
-      //@ts-ignore
-      style={{ "--fx-duration": "700ms" }}
-    >
-      {/* <h2 className="text-3xl font-semibold">Skills</h2>
-      <div className="flex items-center gap-3">
-        Technical Skills: TypeScript · React · Next.js · Node.js
-      </div> */}
-      <div className="space-y-6">
-        <div>
-          <h3 className="mb-2 text-3xl font-medium">{t("skills.programming")}</h3>
-          <div className="flex flex-wrap gap-2">
-            {technicalSkills.programmingLanguages.map((s) => (
-              <Chip key={s}>{s}</Chip>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h3 className="mb-2 text-3xl font-medium">{t("skills.frameworks")}</h3>
-          <div className="flex flex-wrap gap-2">
-            {technicalSkills.frameworksLibraries.map((s) => (
-              <Chip key={s}>{s}</Chip>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h3 className="mb-2 text-3xl font-medium">{t("skills.database")}</h3>
-          <div className="flex flex-wrap gap-2">
-            {technicalSkills.databases.map((s) => (
-              <Chip key={s}>{s}</Chip>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h3 className="mb-2 text-3xl font-medium">{t("skills.tools")}</h3>
-          <div className="flex flex-wrap gap-2">
-            {technicalSkills.tools.map((s) => (
-              <Chip key={s}>{s}</Chip>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h3 className="mb-2 text-3xl font-medium">{t("skills.other")}</h3>
-          <div className="flex flex-wrap gap-2">
-            {technicalSkills.other.map((s) => (
-              <Chip key={s}>{s}</Chip>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
+    <>
+      <StackBand />
+      <Section id="skills" index="04" title={t("sections.skills")}>
+        <dl className="grid gap-x-12 gap-y-10 sm:grid-cols-2">
+          {GROUPS.map((g) => (
+            <div key={g.key}>
+              <dt className="label text-muted">{t(g.key)}</dt>
+              <dd className="mt-3 flex flex-wrap gap-x-2 gap-y-1.5 text-[1.125rem] leading-relaxed">
+                {g.items.map((s, i) => (
+                  <span key={s}>
+                    {s}
+                    {i < g.items.length - 1 && <span className="text-line">,</span>}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+    </>
   );
 }

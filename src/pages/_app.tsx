@@ -1,65 +1,33 @@
 import "@/styles/globals.css";
-// Swiper global styles
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import type { AppProps } from "next/app";
+import { IBM_Plex_Mono, IBM_Plex_Sans_Thai, Instrument_Serif, Noto_Serif_Thai } from "next/font/google";
 import Layout from "@/components/Layout";
 import { I18nProvider } from "@/context/i18n";
-import { useEffect } from "react";
-import Router from "next/router";
+
+const plexThai = IBM_Plex_Sans_Thai({
+  variable: "--font-plex-thai",
+  subsets: ["thai", "latin"],
+  weight: ["300", "400", "500", "600"],
+});
+const plexMono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500"] });
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+});
+const notoSerifThai = Noto_Serif_Thai({ variable: "--font-noto-serif-thai", subsets: ["thai"], weight: ["400", "500"] });
 
 export default function App({ Component, pageProps }: AppProps) {
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    let observer: IntersectionObserver | null = null;
-
-    const initReveal = () => {
-      // Clean up any previous observer
-      if (observer) {
-        observer.disconnect();
-        observer = null;
-      }
-
-      observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            const el = entry.target as HTMLElement;
-            if (entry.isIntersecting) {
-              el.classList.add("is-visible");
-              observer && observer.unobserve(el);
-            }
-          }
-        },
-        { root: null, rootMargin: "0px", threshold: 0.12 }
-      );
-
-      document
-        .querySelectorAll<HTMLElement>(".section-reveal")
-        .forEach((el) => observer && observer.observe(el));
-    };
-
-    initReveal();
-
-    const onRouteDone = () => {
-      // Re-init reveal after route changes
-      initReveal();
-    };
-
-    Router.events.on("routeChangeComplete", onRouteDone);
-
-    return () => {
-      Router.events.off("routeChangeComplete", onRouteDone);
-      if (observer) observer.disconnect();
-    };
-  }, []);
-
   return (
-    <I18nProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </I18nProvider>
+    <div
+      className={`${plexThai.variable} ${plexMono.variable} ${instrument.variable} ${notoSerifThai.variable} font-sans`}
+    >
+      <I18nProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </I18nProvider>
+    </div>
   );
 }

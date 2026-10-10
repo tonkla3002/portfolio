@@ -1,84 +1,72 @@
-import { resumeProjects, experiences } from "@/data/resume";
 import { useI18n } from "@/context/i18n";
-import SwiperCarousel from "@/components/SwiperCarousel";
+import Section from "@/components/SectionHeading";
 
-function Card({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-xl border p-6 dark:border-white/10 hover-elevate tap-press">{children}</div>;
-}
+type Project = {
+  titleKey: string;
+  periodKey: string;
+  descKey: string;
+  context: string;
+  tags: string[];
+};
+
+const PROJECTS: Project[] = [
+  {
+    titleKey: "proj.0.title",
+    periodKey: "proj.0.period",
+    descKey: "proj.0.description",
+    context: "J Ventures",
+    tags: ["Mobile App", "Back-office Portal", "EWA"],
+  },
+  {
+    titleKey: "proj.1.title",
+    periodKey: "proj.1.period",
+    descKey: "proj.1.description",
+    context: "J Ventures",
+    tags: ["CRM", "LINE OA", "Back-office"],
+  },
+  {
+    titleKey: "exp.2.title",
+    periodKey: "exp.2.period",
+    descKey: "exp.2.bullets.0",
+    context: "Senior Project",
+    tags: ["Microcontroller", "Electron.js", "PostgreSQL", "Next.js"],
+  },
+];
 
 export default function ProjectsSection() {
   const { t } = useI18n();
-  const senior = experiences.find((e) => e.title.toLowerCase().startsWith("senior project"));
-  const all = [
-    senior ? { title: senior.title, period: senior.period, description: senior.bullets?.[0] } : undefined,
-    ...resumeProjects,
-  ].filter(Boolean) as { title: string; period?: string; description?: string }[];
-
-  const slides = all.map((p) => (
-    <Card key={p.title}>
-      <div className="flex items-start justify-between gap-4">
-        <div className="font-medium">
-          {(() => {
-            const seniorIdx = 0;
-            const rpIdx = resumeProjects.findIndex((rp) => rp.title === p.title);
-            if (p.title === experiences[0]?.title) {
-              return t(`exp.${seniorIdx}.title`);
-            }
-            if (rpIdx >= 0) return t(`proj.${rpIdx}.title`);
-            return p.title;
-          })()}
-        </div>
-        {p.period && (
-          <span className="text-sm text-zinc-600 dark:text-zinc-400">
-            {(() => {
-              const seniorIdx = 0;
-              const rpIdx = resumeProjects.findIndex((rp) => rp.period === p.period && rp.title === p.title);
-              if (p.title === experiences[0]?.title) {
-                return t(`exp.${seniorIdx}.period`);
-              }
-              if (rpIdx >= 0) return t(`proj.${rpIdx}.period`);
-              return p.period;
-            })()}
-          </span>
-        )}
-      </div>
-      {p.description && (
-        <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">
-          {(() => {
-            const seniorIdx = 0;
-            const rpIdx = resumeProjects.findIndex((rp) => rp.description === p.description && rp.title === p.title);
-            if (p.title === experiences[0]?.title) {
-              return t(`exp.${seniorIdx}.bullets.0`);
-            }
-            if (rpIdx >= 0) return t(`proj.${rpIdx}.description`);
-            return p.description;
-          })()}
-        </p>
-      )}
-    </Card>
-  ));
-
   return (
-    <section
-      id="projects"
-      className="scroll-mt-24 space-y-6 section-reveal fade-side"
-      data-direction="left"
-      data-fade-out="true"
-      //@ts-ignore
-      style={{ "--fx-duration": "700ms" }}
-    >
-      <h2 className="text-3xl font-semibold">{t("sections.projects")}</h2>
-      <SwiperCarousel
-        items={slides}
-        className="w-full"
-        slidesPerView={1}
-        spaceBetween={16}
-        breakpoints={{ 640: { slidesPerView: 1 }, 768: { slidesPerView: 2 }, 1024: { slidesPerView: 2 } }}
-        loop={false}
-        showNavigation
-        showPagination
-        ariaLabel="Projects carousel"
-      />
-    </section>
+    <Section id="projects" index="03" title={t("sections.projects")}>
+      <ol className="border-t border-line">
+        {PROJECTS.map((p, i) => (
+          // Hover inverts the row to paper-on-ink.
+          <li
+            key={p.titleKey}
+            className="group -mx-5 border-b border-line px-5 py-10 transition-colors duration-300 hover:bg-ink hover:text-paper sm:mx-0 sm:px-8"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="label text-accent">
+                {String(i + 1).padStart(2, "0")} — {p.context}
+              </span>
+              <span className="label text-muted transition-colors group-hover:text-paper/70">{t(p.periodKey)}</span>
+            </div>
+            <h3 className="display mt-4 max-w-[22ch] text-[2rem] leading-[1.1] sm:text-[2.6rem]">{t(p.titleKey)}</h3>
+            <p className="mt-4 max-w-[60ch] text-[1.0625rem] leading-[1.75] text-muted transition-colors group-hover:text-paper/80">
+              {t(p.descKey)}
+            </p>
+            <ul className="mt-6 flex flex-wrap gap-2">
+              {p.tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="rounded-full border border-line px-3 py-1 text-sm transition-colors group-hover:border-paper/30"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </Section>
   );
 }

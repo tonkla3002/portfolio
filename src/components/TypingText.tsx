@@ -9,101 +9,70 @@ export type TypingTextHandle = {
 
 type TypingTextProps = {
   text: string;
-  speedMs?: number; // default 300ms per character
-  blink?: boolean; // show blinking cursor
+  speedMs?: number;
+  blink?: boolean;
   className?: string;
   startOnMount?: boolean;
   onComplete?: () => void;
 };
 
+// The visible text is derived from `count`, so double-invoked effects or
+// state updaters (React strict mode) can never drop or duplicate characters.
 const TypingText = forwardRef<TypingTextHandle, TypingTextProps>(function TypingText(
-  { text, speedMs = 300, blink = true, className, startOnMount = true, onComplete },
+  { text, speedMs = 80, blink = true, className, startOnMount = true, onComplete },
   ref
 ) {
-  const [display, setDisplay] = useState<string>("");
-  const [running, setRunning] = useState<boolean>(false);
-  const timerRef = useRef<number | null>(null);
-  const indexRef = useRef<number>(0);
-  const textRef = useRef<string>(text);
-  const reducedMotion = typeof window !== "undefined" && window.matchMedia
-    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    : false;
-
-  const clearTimer = () => {
-    if (timerRef.current) {
-      window.clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  };
-
-  const step = () => {
-    if (indexRef.current >= textRef.current.length) {
-      setRunning(false);
-      clearTimer();
-      onComplete?.();
-      return;
-    }
-    setDisplay((prev) => prev + textRef.current.charAt(indexRef.current));
-    indexRef.current += 1;
-    timerRef.current = window.setTimeout(step, speedMs);
-  };
-
-  const startInternal = () => {
-    clearTimer();
-    indexRef.current = 0;
-    setDisplay("");
-    setRunning(true);
-    timerRef.current = window.setTimeout(step, speedMs);
-  };
+  const [source, setSource] = useState(text);
+  const [count, setCount] = useState(0);
+  const [running, setRunning] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   useEffect(() => {
-    textRef.current = text;
-    if (reducedMotion) {
-      // Respect reduced motion: render immediately
-      clearTimer();
-      setDisplay(textRef.current);
+    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+
+  useEffect(() => {
+    setSource(text);
+    setCount(0);
+    setRunning(startOnMount);
+  }, [text, startOnMount]);
+
+  useEffect(() => {
+    if (!running) return;
+    if (reducedMotion || count >= source.length) {
+      setCount(source.length);
       setRunning(false);
+      onCompleteRef.current?.();
       return;
     }
-    if (startOnMount) {
-      startInternal();
-    } else {
-      // keep empty until external start()
-      setRunning(false);
-      setDisplay("");
-    }
-    return () => clearTimer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, speedMs, startOnMount]);
+    const id = window.setTimeout(() => setCount((c) => c + 1), speedMs);
+    return () => window.clearTimeout(id);
+  }, [running, count, source, speedMs, reducedMotion]);
 
   useImperativeHandle(ref, () => ({
     reset() {
-      clearTimer();
-      indexRef.current = 0;
-      setDisplay("");
+      setCount(0);
       setRunning(false);
     },
     start(nextText?: string) {
-      if (typeof nextText === "string") {
-        textRef.current = nextText;
-      }
-      startInternal();
+      if (typeof nextText === "string") setSource(nextText);
+      setCount(0);
+      setRunning(true);
     },
     pause() {
-      clearTimer();
       setRunning(false);
     },
     resume() {
-      if (!running && !reducedMotion) {
-        setRunning(true);
-        timerRef.current = window.setTimeout(step, speedMs);
-      }
+      setRunning(true);
     },
-  }), [running, speedMs, reducedMotion]);
+  }), []);
 
   return (
-    <span className={className} aria-live="polite">
-      {display}
+    <span className={className}>
+      <span className="sr-only">{source}</span>
+      <span aria-hidden="true">{source.slice(0, count)}</span>
       {blink && !reducedMotion ? (
         <span className="typing-cursor" aria-hidden="true">|</span>
       ) : null}

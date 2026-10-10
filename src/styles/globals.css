@@ -1,294 +1,160 @@
 @import "tailwindcss";
 
-/* Make dark: utilities respond to .dark class on html/body */
+/* dark: utilities respond to the .dark class on <html> */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Warm "paper and ink" palette with a single accent.
+   --muted is kept at >= 6:1 contrast on --paper so secondary text stays readable. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  /* Animation theme */
-  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-fast: 250ms;
-  --duration-medium: 380ms; /* recommended 300–500ms */
-  --duration-slow: 500ms;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  /* Prefer Geist but fall back to Thai-capable font variable when needed */
-  --font-sans: var(--font-geist-sans), var(--font-noto-thai);
-  --font-mono: var(--font-geist-mono);
+  --paper: #f3efe6;
+  --ink: #191714;
+  --muted: #4f4a42;
+  --line: #d6cebd;
+  --accent: #c2410c;
 }
 
 :root.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --paper: #11100e;
+  --ink: #f1ece2;
+  --muted: #b8b0a2;
+  --line: #2f2b26;
+  --accent: #fb8a4c;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  /* Add Thai font variable fallback right after Geist to avoid mis-rendered characters */
-  font-family: var(--font-geist-sans), var(--font-noto-thai), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-plex-thai), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), var(--font-noto-serif-thai), ui-serif, Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 html {
   scroll-behavior: smooth;
+  background: var(--paper);
 }
 
-/* Navbar hover effects */
-.nav-item {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.375rem 0.75rem; /* ~py-1.5 px-3 */
-  border-radius: 0.5rem;
-  border: 1px solid transparent;
-  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease,
-    box-shadow 0.3s ease, border-color 0.3s ease;
-  will-change: transform, box-shadow;
-}
-
-.nav-item::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(120px 60px at 50% 120%, rgba(99, 102, 241, 0.18), transparent 60%);
-  opacity: 0;
-  transform: scale(0.98);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-}
-
-.nav-item:hover {
-  background-color: rgba(24, 24, 27, 0.06); /* light mode subtle bg */
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  border-color: rgba(24, 24, 27, 0.15);
-}
-
-.nav-item:hover::before {
-  opacity: 1;
-  transform: scale(1.03);
-}
-
-.dark .nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.08); /* dark mode subtle bg */
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #fff;
-}
-
-.nav-item:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.45);
-}
-
-/* -----------------------------------------------
-   First-scroll experience: color transition, reveal, parallax
-   ----------------------------------------------- */
-.hero-shell {
-  border-radius: 1rem;
-  transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
-}
-
-/* initial neutral */
-.hero-shell {
-  background: transparent;
-  border: 1px solid transparent;
-}
-
-/* after first scroll: soft gradient and subtle outline */
-.first-scroll .hero-shell {
-  background: linear-gradient(180deg, rgba(99,102,241,0.08), transparent 60%);
-  border-color: rgba(99,102,241,0.2);
-  box-shadow: 0 12px 28px rgba(99,102,241,0.15);
-}
-.dark.first-scroll .hero-shell {
-  background: linear-gradient(180deg, rgba(99,102,241,0.12), transparent 60%);
-  border-color: rgba(255,255,255,0.12);
-  box-shadow: 0 18px 36px rgba(0,0,0,0.5);
-}
-
-/* Title readability tuning */
-.hero-title {
-  text-rendering: optimizeLegibility;
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 17px;
   -webkit-font-smoothing: antialiased;
-  /* Prevent ligature/stylistic substitutions that may alter letter pairs */
-  font-variant-ligatures: none;
-  font-feature-settings: "liga" 0, "calt" 0;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Balance multi-word title wrapping on small screens */
-.title-balance {
-  text-wrap: balance;
+::selection {
+  background: var(--accent);
+  color: var(--paper);
 }
 
-/* Reveal utilities */
-.reveal, .reveal > * {
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity var(--duration-slow) var(--ease-standard), transform var(--duration-slow) var(--ease-standard);
+/* Display type: Instrument Serif for Latin. Thai serif gets thin and hard to read
+   at large sizes, so Thai display text uses Plex Sans Thai semibold instead. */
+.display {
+  font-family: var(--font-instrument), ui-serif, Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
 }
-.first-scroll .reveal, .first-scroll .reveal > * {
-  opacity: 1;
-  transform: translateY(0);
+:lang(th) .display {
+  font-family: var(--font-plex-thai), ui-sans-serif, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
 }
-.reveal-stagger > * { transition-delay: var(--reveal-delay, 0ms); }
-
-/* Parallax utility: set via --parallax-y variable (in px) */
-.parallax-layer {
-  transform: translateY(var(--parallax-y, 0px));
-  will-change: transform;
-  transition: transform 0.05s linear;
-}
-
-/* -----------------------------------------------
-   Page-wide section reveal & micro-interactions
-   ----------------------------------------------- */
-/* Reveal-on-scroll: attach .section-reveal to section wrappers */
-.section-reveal {
-  opacity: 0;
-  transform: translateY(12px);
-  transition:
-    opacity var(--duration-slow) var(--ease-standard),
-    transform var(--duration-slow) var(--ease-standard);
-  will-change: opacity, transform;
-}
-.section-reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+/* Latin words inside Thai display text keep the serif voice. */
+:lang(th) .display .latin {
+  font-family: var(--font-instrument), ui-serif, Georgia, serif;
+  font-weight: 400;
 }
 
-/* Directional fade-in/out from screen sides */
-.fade-side {
-  /* configurable */
-  --fx-duration: 600ms; /* adjust per-element e.g. 700ms, 900ms */
-  opacity: 0;
-  transform: translate3d(var(--fx-x, 0px), var(--fx-y, 0px), 0);
-  transition:
-    opacity var(--fx-duration) var(--ease-standard),
-    transform var(--fx-duration) var(--ease-standard);
-  will-change: opacity, transform;
+/* Small uppercase mono labels; Thai has no case and breaks apart with letter-spacing. */
+.label {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
-.fade-side.is-in {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-.fade-side.is-out {
-  opacity: 0;
-  transform: translate3d(var(--fx-x, 0px), var(--fx-y, 0px), 0);
-}
-.fade-side[data-direction="left"] { --fx-x: -24px; --fx-y: 0px; }
-.fade-side[data-direction="right"] { --fx-x: 24px; --fx-y: 0px; }
-.fade-side[data-direction="top"] { --fx-x: 0px; --fx-y: -24px; }
-.fade-side[data-direction="bottom"] { --fx-x: 0px; --fx-y: 24px; }
-
-/* Card hover elevate: subtle lift & shadow, non-intrusive */
-.hover-elevate {
-  transition:
-    transform var(--duration-medium) var(--ease-standard),
-    box-shadow var(--duration-medium) var(--ease-standard),
-    border-color var(--duration-medium) var(--ease-standard),
-    background-color var(--duration-medium) var(--ease-standard);
-  will-change: transform, box-shadow;
-}
-.hover-elevate:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
-}
-.dark .hover-elevate:hover {
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+:lang(th) .label {
+  font-family: var(--font-plex-thai), ui-sans-serif, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
-/* Chip micro-interaction: gentle hover lift */
-.ui-chip {
-  transition:
-    transform var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard);
-  will-change: transform, box-shadow;
+/* Underline that grows from the left on hover. */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 350ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.ui-chip:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
-}
-.dark .ui-chip:hover {
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+.link-underline:hover,
+.link-underline:focus-visible {
+  background-size: 100% 1px;
 }
 
-/* Tap press: tactile feedback on active */
-.tap-press:active {
-  transform: scale(0.98);
+/* Paper grain so flat colour doesn't feel synthetic. */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Typing cursor blink */
-.typing-cursor {
+/* Hero lines rise out of a mask, one after another. */
+.rise {
+  display: block;
+  overflow: hidden;
+  padding-top: 0.06em;
+  padding-bottom: 0.08em;
+}
+/* Thai stacks tone marks above the cap height, so it needs more leading,
+   and each hero line stays on one line (no word spaces to wrap on). */
+:lang(th) .hero-title {
+  font-size: clamp(2.2rem, 4.9vw, 5.25rem);
+  line-height: 1.22;
+}
+:lang(th) .hero-title .rise > span { white-space: nowrap; }
+.rise > span {
   display: inline-block;
-  /* Keep cursor narrow and non-overlapping with preceding glyphs */
-  width: 0.6ch;
-  margin-left: 0.1em;
-  color: currentColor;
-  animation: cursor-blink 1s steps(1, end) infinite;
+  transform: translateY(105%);
+  animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes rise {
+  to { transform: translateY(0); }
 }
 
-@keyframes cursor-blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+.fade-in {
+  opacity: 0;
+  animation: fade-in 900ms ease forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes fade-in {
+  to { opacity: 1; }
 }
 
-/* Accessible motion: respect reduced motion preferences */
+/* Endless stack band. The track holds two copies, so -50% loops seamlessly. */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .section-reveal,
-  .reveal,
-  .hover-elevate,
-  .ui-chip,
-  .nav-item,
-  .hero-shell {
-    transition: none !important;
-  }
-  .typing-cursor { animation: none !important; }
-  .section-reveal {
-    opacity: 1;
-    transform: none;
-  }
-  .reveal, .reveal > * {
-    opacity: 1;
-    transform: none;
-  }
-  .fade-side {
-    transition: none !important;
-  }
-}
-
-/* -----------------------------------------------
-   Swiper theming & smooth transitions
-   ----------------------------------------------- */
-.swiper {
-  padding-bottom: 26px; /* room for pagination */
-}
-.swiper-slide {
-  transition: transform var(--duration-medium) var(--ease-standard),
-    box-shadow var(--duration-medium) var(--ease-standard);
-}
-.swiper-slide:hover {
-  transform: translateY(-2px);
-}
-.swiper-button-next, .swiper-button-prev {
-  color: var(--foreground);
-}
-.dark .swiper-button-next, .dark .swiper-button-prev {
-  color: #fff;
-}
-.swiper-pagination-bullet {
-  background: var(--foreground);
-  opacity: 0.4;
-}
-.swiper-pagination-bullet-active {
-  opacity: 1;
+  html { scroll-behavior: auto; }
+  .link-underline { transition: none; }
+  .rise > span { animation: none; transform: none; }
+  .fade-in { animation: none; opacity: 1; }
+  .marquee-track { animation: none; flex-wrap: wrap; width: auto; }
 }
