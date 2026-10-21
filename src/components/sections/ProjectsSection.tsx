@@ -62,6 +62,7 @@ export default function ProjectsSection() {
     <Section id="projects" title={t("sections.selected")} count={PROJECTS.length}>
       <RowTable
         columns={columns}
+        hint={t("table.hint")}
         template="minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) 5rem"
         rows={PROJECTS.map((p) => ({
           id: p.titleKey,

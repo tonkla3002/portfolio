@@ -24,7 +24,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-      className="label transition-opacity hover:opacity-60"
+      className="nav-text transition-opacity hover:opacity-60"
     >
       {dark ? "Light" : "Dark"}
     </button>
@@ -35,7 +35,7 @@ export function ThemeToggle() {
 export function LangSwitch() {
   const { lang, setLang, clearLang } = useI18n();
   return (
-    <div role="radiogroup" aria-label="Language" className="label flex items-center gap-2">
+    <div role="radiogroup" aria-label="Language" className="nav-text flex items-center gap-2">
       {(["th", "en"] as const).map((code, i) => {
         const active = lang === code;
         return (

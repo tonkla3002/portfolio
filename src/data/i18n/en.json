@@ -98,5 +98,6 @@
   "col.stack": "Stack",
   "col.school": "Institution",
   "col.detail": "Detail",
-  "hero.hint": "Hover to say hi"
+  "hero.hint": "Hover to say hi",
+  "table.hint": "Click a row for details"
 }

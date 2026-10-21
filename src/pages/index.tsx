@@ -1,6 +1,5 @@
 import { useI18n } from "@/context/i18n";
 import { LangSwitch, ThemeToggle } from "@/components/Controls";
-import { PixelLaptop, PixelSparkles, PixelSun, PixelSunOutline } from "@/components/PixelIcons";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import ExperienceSection from "@/components/sections/ExperienceSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -13,16 +12,35 @@ function TopBar() {
   return (
     <header className="absolute inset-x-0 top-0 z-40">
       <div className="mx-auto flex max-w-[72rem] items-center justify-between px-6 py-5 sm:px-10 lg:px-16">
-        <a href="#top" className="label">T.W.</a>
-        <nav aria-label="Main" className="flex items-center gap-5">
-          <a href="#projects" className="label hidden hover:underline sm:inline">{t("nav.projects")}</a>
-          <a href="#about" className="label hidden hover:underline sm:inline">{t("nav.about")}</a>
-          <a href="#contact" className="label hover:underline">{t("nav.contact")}</a>
+        <a href="#top" className="nav-text">T.W.</a>
+        <nav aria-label="Main" className="flex items-center gap-5 sm:gap-7">
+          <a href="#projects" className="nav-text hidden sweep sm:inline">{t("nav.projects")}</a>
+          <a href="#about" className="nav-text hidden sweep sm:inline">{t("nav.about")}</a>
+          <a href="#contact" className="nav-text sweep">{t("nav.contact")}</a>
           <LangSwitch />
           <ThemeToggle />
         </nav>
       </div>
     </header>
+  );
+}
+
+// One span per letter so each can react to the pointer (see .glyph in globals.css).
+// Letters are grouped into nowrap words so lines still only break between words.
+function Word({ text, initial }: { text: string; initial?: string }) {
+  return (
+    <span className="inline-block whitespace-nowrap">
+      {initial && (
+        <span className="script-initial glyph" aria-hidden>
+          {initial}
+        </span>
+      )}
+      {[...text].map((c, i) => (
+        <span key={i} className="glyph" aria-hidden>
+          {c}
+        </span>
+      ))}
+    </span>
   );
 }
 
@@ -39,37 +57,27 @@ function Masthead() {
       id="top"
       className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-5"
     >
-      <div className="fade-in label absolute left-[11%] top-1/2 hidden -translate-y-1/2 text-muted lg:block" style={{ ["--d" as string]: "900ms" }}>
-        Edition
-        <br />
-        0{String(new Date().getFullYear()).slice(2)}
+      <div className="masthead-fade relative z-10">
+        <h1
+          lang="en"
+          aria-label="Thanakorn Wannatong, Full Stack Developer"
+          className="serif-caps text-center text-[clamp(2.1rem,5.2vw,4.6rem)] leading-[0.98]"
+        >
+          {line(80, (
+            <>
+              <Word initial="T" text="hanakorn" /> <Word initial="W" text="annatong" />
+            </>
+          ))}
+          {line(180, (
+            <>
+              <Word text="Full" /> <Word text="Stack" /> <Word text="Developer" />
+            </>
+          ))}
+        </h1>
       </div>
-      <div className="fade-in label absolute right-[11%] top-1/2 hidden -translate-y-1/2 text-muted lg:block" style={{ ["--d" as string]: "900ms" }}>
-        NestJS
-        <br />
-        Go Fiber
-      </div>
-
-      <h1 lang="en" className="serif-caps relative z-10 text-center text-[clamp(2.1rem,5.2vw,4.6rem)] leading-[0.98]">
-        {line(80, <><span className="script-initial">T</span>hanakorn <span className="script-initial">W</span>annatong</>)}
-        {line(180, "Full Stack")}
-        {line(280, (
-          <span className="pixel inline-flex items-center gap-[0.18em] text-[0.88em]">
-            <PixelSun className="spin-slow" />
-            Developer
-            <PixelSunOutline className="spin-slow" />
-          </span>
-        ))}
-        {line(380, "At J Ventures")}
-        {line(480, (
-          <>
-            Folio©{new Date().getFullYear()} <PixelLaptop /> <PixelSparkles />
-          </>
-        ))}
-      </h1>
 
       <a href="#projects" className="fade-in label absolute bottom-6 left-1/2 -translate-x-1/2 text-muted hover:text-ink" style={{ ["--d" as string]: "1100ms" }}>
-        ( Scroll )
+        ( Scroll <span className="bob" aria-hidden>↓</span> )
       </a>
     </section>
   );
@@ -78,6 +86,7 @@ function Masthead() {
 export default function Home() {
   return (
     <>
+      <div className="progress" aria-hidden />
       <TopBar />
       <Masthead />
       <main id="content" className="mx-auto max-w-[72rem] px-6 sm:px-10 lg:px-16">

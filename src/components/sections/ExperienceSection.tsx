@@ -25,6 +25,7 @@ export default function ExperienceSection() {
     <Section id="experience" title={t("sections.experience")} count={experiences.length}>
       <RowTable
         columns={columns}
+        hint={t("table.hint")}
         template="minmax(0,1.6fr) minmax(0,1.4fr) 13rem"
         mobileTemplate="minmax(0,1.1fr) minmax(0,1fr)"
         rows={experiences.map((exp, idx) => {
@@ -53,9 +54,11 @@ export default function ExperienceSection() {
         href="/Resume-Thanakorn-Wannatong.pdf"
         target="_blank"
         rel="noreferrer"
-        className="label mt-6 inline-block underline-offset-4 hover:underline"
+        style={{ ["--i" as string]: 6 }}
+        className="reveal-item mt-10 inline-flex items-center gap-3 rounded-full border border-ink px-7 py-3.5 text-base font-medium transition-colors hover:bg-ink hover:text-paper"
       >
-        {t("cta.resumeFull")} ↗
+        {t("cta.resumeFull")}
+        <span aria-hidden>↗</span>
       </a>
     </Section>
   );
