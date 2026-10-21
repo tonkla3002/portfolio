@@ -1,4 +1,5 @@
-import { summary, softSkills } from "@/data/resume";
+import Link from "next/link";
+import { softSkills } from "@/data/resume";
 import { useI18n } from "@/context/i18n";
 
 export default function About() {
@@ -33,7 +34,7 @@ export default function About() {
               </a>
             </li>
             <li>
-              <a className="underline tap-press" href="/contact">{t("nav.contact")}</a>
+              <Link className="underline tap-press" href="/contact">{t("nav.contact")}</Link>
             </li>
           </ul>
         </div>

@@ -1,4 +1,3 @@
-import { education } from "@/data/resume";
 import { useI18n } from "@/context/i18n";
 
 export default function Education() {

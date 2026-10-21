@@ -1,4 +1,4 @@
-import { experiences, resumeProjects, competition } from "@/data/resume";
+import { experiences, resumeProjects } from "@/data/resume";
 import { useI18n } from "@/context/i18n";
 
 function Card({ children }: { children: React.ReactNode }) {
