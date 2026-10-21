@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useI18n } from "@/context/i18n";
 
-export function ThemeToggle() {
-  const [dark, setDark] = useState(false);
+// The theme lives on <html class="dark">; read it as an external store so the
+// button stays in sync without setState-in-effect.
+function subscribeTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  return () => observer.disconnect();
+}
+const isDark = () => document.documentElement.classList.contains("dark");
 
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
-  }, []);
+export function ThemeToggle() {
+  const dark = useSyncExternalStore(subscribeTheme, isDark, () => false);
 
   const toggle = () => {
     const next = !dark;
-    setDark(next);
     document.documentElement.classList.toggle("dark", next);
     localStorage.setItem("theme", next ? "dark" : "light");
   };
@@ -20,7 +24,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-      className="label label-tightr text-muted transition-colors hover:text-ink"
+      className="label transition-opacity hover:opacity-60"
     >
       {dark ? "Light" : "Dark"}
     </button>
@@ -31,12 +35,12 @@ export function ThemeToggle() {
 export function LangSwitch() {
   const { lang, setLang, clearLang } = useI18n();
   return (
-    <div role="radiogroup" aria-label="Language" className="flex items-center gap-2 label label-tightr">
+    <div role="radiogroup" aria-label="Language" className="label flex items-center gap-2">
       {(["th", "en"] as const).map((code, i) => {
         const active = lang === code;
         return (
           <span key={code} className="flex items-center gap-2">
-            {i > 0 && <span className="text-line" aria-hidden>/</span>}
+            {i > 0 && <span className="opacity-50" aria-hidden>/</span>}
             <button
               type="button"
               role="radio"
@@ -46,7 +50,7 @@ export function LangSwitch() {
                 if (e.altKey || e.metaKey) { clearLang(); return; }
                 if (!active) setLang(code);
               }}
-              className={"uppercase " + (active ? "text-ink" : "text-muted transition-colors hover:text-ink")}
+              className={"uppercase " + (active ? "" : "opacity-50 transition-opacity hover:opacity-100")}
             >
               {code}
             </button>

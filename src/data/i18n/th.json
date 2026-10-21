@@ -55,7 +55,7 @@
   "hero.role": "นักพัฒนาฟูลสแต็ค",
   "hero.available": "Full Stack Developer @ J Ventures",
   "cta.contact": "ติดต่อผม",
-  "contact.heading": "คุยกันได้นะครับ",
+  "contact.heading": "มาทำงานด้วยกันครับ",
   "label.university": "มหาวิทยาลัย",
   "exp.2.title": "โครงงานนักศึกษา: ระบบทดสอบมาตรฐานอุณหภูมิและกระแสไฟฟ้าของเตารีด",
   "exp.2.period": "2025",
@@ -85,5 +85,18 @@
   "hero.eduValue": "วศ.บ. วิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยนเรศวร",
   "hero.scroll": "เลื่อนลง",
   "sections.stack": "สแต็ก",
-  "skills.heading": "เครื่องมือที่ใช้ประจำ"
+  "skills.heading": "เครื่องมือที่ใช้ประจำ",
+  "sections.selected": "ผลงานที่คัดมา",
+  "col.project": "โปรเจกต์",
+  "col.category": "ประเภท",
+  "col.client": "ลูกค้า / องค์กร",
+  "col.year": "ปี",
+  "col.role": "ตำแหน่ง",
+  "col.company": "บริษัท",
+  "col.period": "ช่วงเวลา",
+  "col.area": "หมวด",
+  "col.stack": "เทคโนโลยี",
+  "col.school": "สถาบัน",
+  "col.detail": "รายละเอียด",
+  "hero.hint": "ชี้เพื่อทักทาย"
 }

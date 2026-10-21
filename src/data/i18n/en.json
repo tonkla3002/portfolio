@@ -55,7 +55,7 @@
   "hero.role": "Fullstack Developer",
   "hero.available": "Full Stack Developer @ J Ventures",
   "cta.contact": "Get in touch",
-  "contact.heading": "Let's talk.",
+  "contact.heading": "Let's work together",
   "label.university": "University",
   "exp.2.title": "Senior Project: The system for testing the temperature and electric current standards of an iron.",
   "exp.2.period": "2025",
@@ -85,5 +85,18 @@
   "hero.eduValue": "B.Eng. Computer Engineering, Naresuan University",
   "hero.scroll": "Scroll",
   "sections.stack": "Stack",
-  "skills.heading": "Tools I reach for"
+  "skills.heading": "Tools I reach for",
+  "sections.selected": "Selected projects",
+  "col.project": "Project",
+  "col.category": "Category",
+  "col.client": "Client",
+  "col.year": "Year",
+  "col.role": "Role",
+  "col.company": "Company",
+  "col.period": "Period",
+  "col.area": "Area",
+  "col.stack": "Stack",
+  "col.school": "Institution",
+  "col.detail": "Detail",
+  "hero.hint": "Hover to say hi"
 }

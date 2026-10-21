@@ -1,45 +1,42 @@
 import { contact } from "@/data/resume";
 import { useI18n } from "@/context/i18n";
+import { PixelSparkles } from "@/components/PixelIcons";
 
 export default function ContactSection() {
   const { t } = useI18n();
   const email = contact.email.toLowerCase();
+  const phone = contact.phone.replace(/^\+66(\d{2})(\d{3})(\d{4})$/, "+66 $1 $2 $3");
+
   return (
-    <section id="contact" aria-labelledby="contact-title" className="scroll-mt-20 border-t border-line pt-20 pb-12 md:pt-28">
-      <div className="label text-accent">06 — {t("sections.contact")}</div>
-      <h2 id="contact-title" className="display mt-4 text-[clamp(2.5rem,5.5vw,5rem)] leading-[1]">
-        {t("contact.heading")}
-      </h2>
-      <p className="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-muted">{t("contact.lead")}</p>
-
-      <a
-        href={`mailto:${contact.email}`}
-        className="group mt-12 flex items-center justify-between gap-6 border-y border-line py-8 transition-colors hover:text-accent"
-      >
-        <span className="display min-w-0 break-words text-[clamp(1.25rem,2.8vw,2.5rem)] leading-tight">
-          <span className="latin">{email}</span>
-        </span>
-        <span
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-current text-2xl transition-transform duration-300 group-hover:-rotate-45 sm:h-16 sm:w-16"
-          aria-hidden
+    <footer id="contact" aria-labelledby="contact-title" className="scroll-mt-16 pt-28 md:pt-40">
+      <div className="border-t border-ink pt-16 text-center md:pt-24">
+        <div className="label text-muted">{t("sections.contact")}</div>
+        <h2 id="contact-title" className="serif-caps mx-auto mt-4 max-w-[16ch] text-[clamp(2.2rem,5.5vw,4.75rem)] leading-[0.95]">
+          {t("contact.heading")}
+        </h2>
+        <a
+          href={`mailto:${contact.email}`}
+          className="mt-10 inline-block break-all text-[clamp(1.05rem,2.2vw,1.6rem)] underline decoration-1 underline-offset-[0.3em] transition-opacity hover:opacity-60"
         >
-          →
-        </span>
-      </a>
-
-      <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4 text-[1.0625rem]">
-        <a href={`tel:${contact.phone}`} className="link-underline">
-          {contact.phone.replace(/^\+66(\d{2})(\d{3})(\d{4})$/, "+66 $1 $2 $3")}
+          {email}
         </a>
-        <a href="/Resume-Thanakorn-Wannatong.pdf" target="_blank" rel="noreferrer" className="link-underline">
-          {t("nav.resume")} (PDF) ↗
-        </a>
+        <div className="mt-4 flex flex-wrap justify-center gap-x-8 gap-y-2">
+          <a href={`tel:${contact.phone}`} className="label hover:underline">
+            {phone}
+          </a>
+          <a href="/Resume-Thanakorn-Wannatong.pdf" target="_blank" rel="noreferrer" className="label hover:underline">
+            {t("nav.resume")} PDF ↗
+          </a>
+        </div>
       </div>
 
-      <footer className="mt-24 flex flex-col justify-between gap-3 text-sm text-muted sm:flex-row">
-        <span>© {new Date().getFullYear()} Thanakorn Wannatong</span>
-        <span className="max-w-md sm:text-right">{t("footer.credit")}</span>
-      </footer>
-    </section>
+      <div lang="en" className="mt-28 grid grid-cols-[1fr_auto_1fr] items-end gap-4 pb-6 md:mt-36">
+        <span className="label text-muted">Thanakorn W.</span>
+        <span className="serif-caps text-[clamp(1.6rem,3.6vw,3rem)] leading-none">
+          Folio©{new Date().getFullYear()} <PixelSparkles />
+        </span>
+        <span className="label text-right text-muted">Next.js · Tailwind</span>
+      </div>
+    </footer>
   );
 }

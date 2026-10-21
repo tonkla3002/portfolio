@@ -3,22 +3,19 @@
 /* dark: utilities respond to the .dark class on <html> */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Warm "paper and ink" palette with a single accent.
-   --muted is kept at >= 6:1 contrast on --paper so secondary text stays readable. */
+/* Strict monochrome: paper grey and ink, nothing else. */
 :root {
-  --paper: #f3efe6;
-  --ink: #191714;
-  --muted: #4f4a42;
-  --line: #d6cebd;
-  --accent: #c2410c;
+  --paper: #ebebea;
+  --ink: #111111;
+  --muted: #5c5c5a;
+  --line: #c9c9c6;
 }
 
 :root.dark {
-  --paper: #11100e;
-  --ink: #f1ece2;
-  --muted: #b8b0a2;
-  --line: #2f2b26;
-  --accent: #fb8a4c;
+  --paper: #111111;
+  --ink: #ebebea;
+  --muted: #a3a3a0;
+  --line: #333331;
 }
 
 @theme inline {
@@ -26,9 +23,7 @@
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--line);
-  --color-accent: var(--accent);
   --font-sans: var(--font-plex-thai), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-instrument), var(--font-noto-serif-thai), ui-serif, Georgia, serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
@@ -40,91 +35,64 @@ html {
 body {
   background: var(--paper);
   color: var(--ink);
-  font-size: 17px;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: var(--accent);
+  background: var(--ink);
   color: var(--paper);
 }
 
-/* Display type: Instrument Serif for Latin. Thai serif gets thin and hard to read
-   at large sizes, so Thai display text uses Plex Sans Thai semibold instead. */
-.display {
-  font-family: var(--font-instrument), ui-serif, Georgia, serif;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-}
-:lang(th) .display {
-  font-family: var(--font-plex-thai), ui-sans-serif, sans-serif;
+/* ---------- Masthead type ---------- */
+.serif-caps {
+  font-family: var(--font-bodoni), "Times New Roman", serif;
   font-weight: 600;
-  letter-spacing: -0.03em;
-}
-/* Latin words inside Thai display text keep the serif voice. */
-:lang(th) .display .latin {
-  font-family: var(--font-instrument), ui-serif, Georgia, serif;
-  font-weight: 400;
-}
-
-/* Small uppercase mono labels; Thai has no case and breaks apart with letter-spacing. */
-.label {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
-  font-size: 0.8125rem;
-  line-height: 1.5;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: -0.035em;
+  font-variant-numeric: lining-nums;
 }
-:lang(th) .label {
-  font-family: var(--font-plex-thai), ui-sans-serif, sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
+/* Swash initial that dips below the line, like a monogram. */
+.script-initial {
+  font-family: var(--font-script), cursive;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1.32em;
+  line-height: 0;
+  margin-right: 0.02em;
+}
+.pixel {
+  font-family: var(--font-pixel), ui-monospace, monospace;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
-/* Underline that grows from the left on hover. */
-.link-underline {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1px;
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  transition: background-size 350ms cubic-bezier(0.22, 1, 0.36, 1);
+/* Small uppercase mono labels. Thai has no case and breaks apart with letter-spacing. */
+.label {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
-.link-underline:hover,
-.link-underline:focus-visible {
-  background-size: 100% 1px;
-}
-
-/* Paper grain so flat colour doesn't feel synthetic. */
-.grain::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 60;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+.label:lang(th) {
+  font-family: var(--font-plex-thai), ui-sans-serif, sans-serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0;
 }
 
-/* Hero lines rise out of a mask, one after another. */
+/* ---------- Motion ---------- */
 .rise {
   display: block;
   overflow: hidden;
-  padding-top: 0.06em;
-  padding-bottom: 0.08em;
+  padding: 0.04em 0 0.06em;
 }
-/* Thai stacks tone marks above the cap height, so it needs more leading,
-   and each hero line stays on one line (no word spaces to wrap on). */
-:lang(th) .hero-title {
-  font-size: clamp(2rem, 3.8vw, 3.75rem);
-  line-height: 1.22;
-}
-:lang(th) .hero-title .rise > span { white-space: nowrap; }
 .rise > span {
   display: inline-block;
-  transform: translateY(105%);
-  animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform: translateY(110%);
+  animation: rise 1000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   animation-delay: var(--d, 0ms);
 }
 @keyframes rise {
@@ -140,21 +108,31 @@ body {
   to { opacity: 1; }
 }
 
-/* Endless stack band. The track holds two copies, so -50% loops seamlessly. */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 40s linear infinite;
+/* Slow spin for the pixel suns. */
+.spin-slow { animation: spin 12s steps(12) infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Expandable table rows. */
+.row-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.marquee:hover .marquee-track { animation-play-state: paused; }
-@keyframes marquee {
-  to { transform: translateX(-50%); }
-}
+.row-body > div { overflow: hidden; }
+.row-open .row-body { grid-template-rows: 1fr; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .link-underline { transition: none; }
   .rise > span { animation: none; transform: none; }
   .fade-in { animation: none; opacity: 1; }
-  .marquee-track { animation: none; flex-wrap: wrap; width: auto; }
+  .spin-slow { animation: none; }
+  .row-body { transition: none; }
+}
+
+/* Thai has no serif caps in Bodoni; Thai titles use Plex Sans Thai semibold.
+   The masthead is marked lang="en" so it keeps its Latin type in both languages. */
+.serif-caps:lang(th) {
+  font-family: var(--font-plex-thai), ui-sans-serif, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }

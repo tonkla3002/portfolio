@@ -1,72 +1,90 @@
 import { useI18n } from "@/context/i18n";
 import Section from "@/components/SectionHeading";
+import RowTable, { Column } from "@/components/RowTable";
 
 type Project = {
   titleKey: string;
-  periodKey: string;
   descKey: string;
-  context: string;
+  category: string;
+  client: string;
+  year: string;
   tags: string[];
 };
 
 const PROJECTS: Project[] = [
   {
     titleKey: "proj.0.title",
-    periodKey: "proj.0.period",
     descKey: "proj.0.description",
-    context: "J Ventures",
-    tags: ["Mobile App", "Back-office Portal", "EWA"],
+    category: "Mobile app, Back-office",
+    client: "J Ventures",
+    year: "2026",
+    tags: ["EWA", "Mobile App", "Back-office Portal"],
   },
   {
     titleKey: "proj.1.title",
-    periodKey: "proj.1.period",
     descKey: "proj.1.description",
-    context: "J Ventures",
+    category: "CRM, LINE OA",
+    client: "J Ventures",
+    year: "2026",
     tags: ["CRM", "LINE OA", "Back-office"],
   },
   {
     titleKey: "exp.2.title",
-    periodKey: "exp.2.period",
     descKey: "exp.2.bullets.0",
-    context: "Senior Project",
+    category: "IoT, Dashboard",
+    client: "Senior Project, NU",
+    year: "2025",
     tags: ["Microcontroller", "Electron.js", "PostgreSQL", "Next.js"],
+  },
+  {
+    titleKey: "competition.title",
+    descKey: "competition.note",
+    category: "Competition, Web",
+    client: "University team",
+    year: "2024",
+    tags: ["Silver Medal"],
   },
 ];
 
+// "Senior Project: The system for ..." reads better in the table without its prefix.
+const dropPrefix = (s: string) => (s.includes(":") ? s.slice(s.indexOf(":") + 1).trim() : s);
+
 export default function ProjectsSection() {
   const { t } = useI18n();
+  const columns: Column[] = [
+    { label: t("col.project") },
+    { label: t("col.category"), desktopOnly: true },
+    { label: t("col.client"), desktopOnly: true },
+    { label: t("col.year"), align: "right" },
+  ];
+
   return (
-    <Section id="projects" index="03" title={t("sections.projects")}>
-      <ol className="border-t border-line">
-        {PROJECTS.map((p, i) => (
-          // Hover inverts the row to paper-on-ink.
-          <li
-            key={p.titleKey}
-            className="group -mx-5 border-b border-line px-5 py-10 transition-colors duration-300 hover:bg-ink hover:text-paper sm:mx-0 sm:px-8"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <span className="label text-accent">
-                {String(i + 1).padStart(2, "0")} — {p.context}
-              </span>
-              <span className="label text-muted transition-colors group-hover:text-paper/70">{t(p.periodKey)}</span>
+    <Section id="projects" title={t("sections.selected")} count={PROJECTS.length}>
+      <RowTable
+        columns={columns}
+        template="minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) 5rem"
+        rows={PROJECTS.map((p) => ({
+          id: p.titleKey,
+          cells: [dropPrefix(t(p.titleKey)), p.category, p.client, p.year],
+          body: (
+            <div className="grid gap-4 md:gap-x-6 md:[grid-template-columns:var(--cols)]">
+              <p className="max-w-[60ch] leading-relaxed text-muted">{t(p.descKey)}</p>
+              <div className="md:col-span-3">
+                <p className="label text-muted md:hidden">
+                  {p.category} — {p.client}
+                </p>
+                <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 md:mt-0">
+                  {p.tags.map((tag) => (
+                    <li key={tag} className="label">
+                      ✳ {tag}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <h3 className="display mt-4 max-w-[28ch] text-[1.6rem] leading-[1.15] sm:text-[2rem]">{t(p.titleKey)}</h3>
-            <p className="mt-4 max-w-[60ch] text-[1.0625rem] leading-[1.75] text-muted transition-colors group-hover:text-paper/80">
-              {t(p.descKey)}
-            </p>
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {p.tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="rounded-full border border-line px-3 py-1 text-sm transition-colors group-hover:border-paper/30"
-                >
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ol>
+          ),
+        }))}
+      />
     </Section>
   );
 }

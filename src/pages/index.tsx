@@ -1,104 +1,104 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useI18n } from "@/context/i18n";
 import { LangSwitch, ThemeToggle } from "@/components/Controls";
-import AboutSection from "@/components/sections/AboutSection";
-import ExperienceSection from "@/components/sections/ExperienceSection";
+import { PixelLaptop, PixelSparkles, PixelSun, PixelSunOutline } from "@/components/PixelIcons";
 import ProjectsSection from "@/components/sections/ProjectsSection";
+import ExperienceSection from "@/components/sections/ExperienceSection";
+import AboutSection from "@/components/sections/AboutSection";
 import SkillsSection from "@/components/sections/SkillsSection";
 import EducationSection from "@/components/sections/EducationSection";
 import ContactSection from "@/components/sections/ContactSection";
 
-const NAV = ["about", "experience", "projects", "skills", "contact"] as const;
-
 function TopBar() {
   const { t } = useI18n();
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header
-      className={
-        "sticky top-0 z-40 transition-colors duration-300 " +
-        (scrolled ? "border-b border-line bg-paper/85 backdrop-blur-md" : "border-b border-transparent")
-      }
-    >
-      <div className="mx-auto flex h-16 max-w-[90rem] items-center justify-between px-5 sm:px-10">
-        <a href="#top" className="display text-2xl leading-none">
-          <span className="latin">Thanakorn W.</span>
-        </a>
-        <nav aria-label="Sections" className="hidden items-center gap-8 md:flex">
-          {NAV.map((id) => (
-            <a key={id} href={`#${id}`} className="link-underline text-[0.95rem] text-muted hover:text-ink">
-              {t(`nav.${id}`)}
-            </a>
-          ))}
-        </nav>
-        <div className="flex items-center gap-5">
+    <header className="absolute inset-x-0 top-0 z-40">
+      <div className="mx-auto flex max-w-[72rem] items-center justify-between px-6 py-5 sm:px-10 lg:px-16">
+        <a href="#top" className="label">T.W.</a>
+        <nav aria-label="Main" className="flex items-center gap-5">
+          <a href="#projects" className="label hidden hover:underline sm:inline">{t("nav.projects")}</a>
+          <a href="#about" className="label hidden hover:underline sm:inline">{t("nav.about")}</a>
+          <a href="#contact" className="label hover:underline">{t("nav.contact")}</a>
           <LangSwitch />
           <ThemeToggle />
-        </div>
+        </nav>
       </div>
     </header>
   );
 }
 
-function Hero() {
-  const { t } = useI18n();
+// Centered masthead in mixed type. Hovering it (mouse only) shows the portrait following the cursor.
+function Masthead() {
+  const ref = useRef<HTMLElement>(null);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+
+  const onMove = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse" || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    setPos({ x: e.clientX - r.left, y: e.clientY - r.top });
+  };
+
+  const line = (delay: number, content: React.ReactNode) => (
+    <span className="rise">
+      <span style={{ ["--d" as string]: `${delay}ms` }}>{content}</span>
+    </span>
+  );
+
   return (
-    <section id="top" className="flex flex-col justify-between pt-10 pb-16 sm:pt-14 lg:min-h-[calc(100svh-4rem)] lg:pb-10">
-      <div className="grid items-end gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-16">
-        <div className="order-2 md:order-1">
-          <div className="fade-in label text-accent" style={{ ["--d" as string]: "60ms" }}>
-            Thanakorn Wannatong — &ldquo;Tonkla&rdquo;
-          </div>
-          <h1 className="hero-title display mt-5 text-[clamp(2.25rem,4.6vw,4.5rem)] leading-[1.02]">
-            <span className="rise"><span style={{ ["--d" as string]: "120ms" }}>{t("hero.l1")}</span></span>
-          </h1>
-        </div>
-
-        <div className="fade-in order-1 md:order-2 md:justify-self-end" style={{ ["--d" as string]: "200ms" }}>
-          <div className="relative aspect-[4/5] w-full max-w-[22rem] overflow-hidden rounded-[1.75rem] bg-line sm:max-w-[26rem] md:w-[min(30vw,28rem)] md:max-w-none">
-            <Image
-              src="/profile-web.jpg"
-              alt="Thanakorn Wannatong"
-              fill
-              sizes="(min-width: 768px) 28rem, 90vw"
-              className="object-cover object-[50%_20%]"
-              priority
-            />
-          </div>
-        </div>
+    <section
+      id="top"
+      ref={ref}
+      onPointerMove={onMove}
+      onPointerLeave={() => setPos(null)}
+      className="relative flex min-h-[100svh] cursor-crosshair items-center justify-center overflow-hidden px-5"
+    >
+      <div className="fade-in label absolute left-[11%] top-1/2 hidden -translate-y-1/2 text-muted lg:block" style={{ ["--d" as string]: "900ms" }}>
+        Edition
+        <br />
+        0{String(new Date().getFullYear()).slice(2)}
+      </div>
+      <div className="fade-in label absolute right-[11%] top-1/2 hidden -translate-y-1/2 text-muted lg:block" style={{ ["--d" as string]: "900ms" }}>
+        NestJS
+        <br />
+        Go Fiber
       </div>
 
-      <div
-        className="fade-in mt-14 grid gap-6 border-t border-line pt-6 sm:grid-cols-2 lg:grid-cols-4"
-        style={{ ["--d" as string]: "700ms" }}
-      >
-        <div>
-          <div className="label text-muted">{t("hero.now")}</div>
-          <p className="mt-1.5 leading-snug">{t("hero.position")}</p>
-        </div>
-        <div>
-          <div className="label text-muted">{t("hero.stack")}</div>
-          <p className="mt-1.5 leading-snug">NestJS · Go Fiber · Next.js · PostgreSQL</p>
-        </div>
-        <div>
-          <div className="label text-muted">{t("hero.edu")}</div>
-          <p className="mt-1.5 leading-snug">{t("hero.eduValue")}</p>
-        </div>
-        <a href="#about" className="group hidden items-end justify-end gap-3 lg:flex">
-          <span className="label text-muted transition-colors group-hover:text-ink">{t("hero.scroll")}</span>
-          <span className="grid h-10 w-10 place-items-center rounded-full border border-line transition-colors group-hover:border-ink group-hover:bg-ink group-hover:text-paper">
-            ↓
+      <h1 lang="en" className="serif-caps relative z-10 text-center text-[clamp(2.1rem,5.2vw,4.6rem)] leading-[0.98]">
+        {line(80, <><span className="script-initial">T</span>hanakorn <span className="script-initial">W</span>annatong</>)}
+        {line(180, "Full Stack")}
+        {line(280, (
+          <span className="pixel inline-flex items-center gap-[0.18em] text-[0.88em]">
+            <PixelSun className="spin-slow" />
+            Developer
+            <PixelSunOutline className="spin-slow" />
           </span>
-        </a>
+        ))}
+        {line(380, "At J Ventures")}
+        {line(480, (
+          <>
+            Folio©{new Date().getFullYear()} <PixelLaptop /> <PixelSparkles />
+          </>
+        ))}
+      </h1>
+
+      {/* Cursor-following portrait (desktop mouse only). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute z-0 h-[17rem] w-[13.5rem] overflow-hidden transition-[opacity,transform] duration-300 ease-out"
+        style={{
+          left: pos?.x ?? 0,
+          top: pos?.y ?? 0,
+          opacity: pos ? 1 : 0,
+          transform: `translate(-50%, -50%) scale(${pos ? 1 : 0.9})`,
+        }}
+      >
+        <Image src="/profile-web.jpg" alt="" fill sizes="216px" className="object-cover object-[50%_20%] grayscale" priority />
       </div>
+
+      <a href="#projects" className="fade-in label absolute bottom-6 left-1/2 -translate-x-1/2 text-muted hover:text-ink" style={{ ["--d" as string]: "1100ms" }}>
+        ( Scroll )
+      </a>
     </section>
   );
 }
@@ -107,11 +107,11 @@ export default function Home() {
   return (
     <>
       <TopBar />
-      <main id="content" className="mx-auto max-w-[90rem] overflow-x-clip px-5 sm:px-10">
-        <Hero />
-        <AboutSection />
-        <ExperienceSection />
+      <Masthead />
+      <main id="content" className="mx-auto max-w-[72rem] px-6 sm:px-10 lg:px-16">
         <ProjectsSection />
+        <ExperienceSection />
+        <AboutSection />
         <SkillsSection />
         <EducationSection />
         <ContactSection />

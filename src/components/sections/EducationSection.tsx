@@ -1,23 +1,33 @@
 import { useI18n } from "@/context/i18n";
 import Section from "@/components/SectionHeading";
+import RowTable, { Column } from "@/components/RowTable";
 
 export default function EducationSection() {
   const { t } = useI18n();
-  const rows = [
-    { period: t("education.period"), title: t("education.university"), note: t("education.degree") },
-    { period: `${t("competition.period")} · ${t("label.award")}`, title: t("competition.title"), note: t("competition.note") },
+  const columns: Column[] = [
+    { label: t("col.school") },
+    { label: t("col.detail"), desktopOnly: true },
+    { label: t("col.period"), align: "right" },
   ];
+  // On mobile the degree sits under the university name instead of in its own column.
+  const school = (
+    <span key="s">
+      {t("education.university")}
+      <span className="block text-muted md:hidden">{t("education.degree")}</span>
+    </span>
+  );
   return (
-    <Section id="education" index="05" title={t("sections.education")}>
-      <ul className="grid gap-12 sm:grid-cols-2">
-        {rows.map((r) => (
-          <li key={r.title}>
-            <div className="label text-accent">{r.period}</div>
-            <h3 className="mt-2 text-[1.2rem] font-semibold leading-snug">{r.title}</h3>
-            <p className="mt-2 text-[1.0625rem] leading-relaxed text-muted">{r.note}</p>
-          </li>
-        ))}
-      </ul>
+    <Section id="education" title={t("sections.education")}>
+      <RowTable
+        columns={columns}
+        template="minmax(0,1.6fr) minmax(0,1.4fr) 13rem"
+        rows={[
+          {
+            id: "nu",
+            cells: [school, t("education.degree"), t("education.period")],
+          },
+        ]}
+      />
     </Section>
   );
 }
