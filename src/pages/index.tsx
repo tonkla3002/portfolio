@@ -1,5 +1,3 @@
-import Image from "next/image";
-import { useRef, useState } from "react";
 import { useI18n } from "@/context/i18n";
 import { LangSwitch, ThemeToggle } from "@/components/Controls";
 import { PixelLaptop, PixelSparkles, PixelSun, PixelSunOutline } from "@/components/PixelIcons";
@@ -28,17 +26,8 @@ function TopBar() {
   );
 }
 
-// Centered masthead in mixed type. Hovering it (mouse only) shows the portrait following the cursor.
+// Centered masthead in mixed type.
 function Masthead() {
-  const ref = useRef<HTMLElement>(null);
-  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
-
-  const onMove = (e: React.PointerEvent) => {
-    if (e.pointerType !== "mouse" || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    setPos({ x: e.clientX - r.left, y: e.clientY - r.top });
-  };
-
   const line = (delay: number, content: React.ReactNode) => (
     <span className="rise">
       <span style={{ ["--d" as string]: `${delay}ms` }}>{content}</span>
@@ -48,10 +37,7 @@ function Masthead() {
   return (
     <section
       id="top"
-      ref={ref}
-      onPointerMove={onMove}
-      onPointerLeave={() => setPos(null)}
-      className="relative flex min-h-[100svh] cursor-crosshair items-center justify-center overflow-hidden px-5"
+      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-5"
     >
       <div className="fade-in label absolute left-[11%] top-1/2 hidden -translate-y-1/2 text-muted lg:block" style={{ ["--d" as string]: "900ms" }}>
         Edition
@@ -81,20 +67,6 @@ function Masthead() {
           </>
         ))}
       </h1>
-
-      {/* Cursor-following portrait (desktop mouse only). */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute z-0 h-[17rem] w-[13.5rem] overflow-hidden transition-[opacity,transform] duration-300 ease-out"
-        style={{
-          left: pos?.x ?? 0,
-          top: pos?.y ?? 0,
-          opacity: pos ? 1 : 0,
-          transform: `translate(-50%, -50%) scale(${pos ? 1 : 0.9})`,
-        }}
-      >
-        <Image src="/profile-web.jpg" alt="" fill sizes="216px" className="object-cover object-[50%_20%] grayscale" priority />
-      </div>
 
       <a href="#projects" className="fade-in label absolute bottom-6 left-1/2 -translate-x-1/2 text-muted hover:text-ink" style={{ ["--d" as string]: "1100ms" }}>
         ( Scroll )

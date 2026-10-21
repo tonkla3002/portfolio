@@ -31,6 +31,14 @@ pipeline {
     stage('Build') {
       steps { sh 'npm run build' }
     }
+    stage('Deploy') {
+      when { expression { env.GIT_BRANCH in ['main', 'origin/main'] } }
+      steps {
+        withCredentials([sshUserPrivateKey(credentialsId: 'portfolio-deploy', keyFileVariable: 'KEY')]) {
+          sh 'ssh -i "$KEY" -o IdentitiesOnly=yes tonkla@host.docker.internal'
+        }
+      }
+    }
   }
 
   post {
