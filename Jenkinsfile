@@ -31,7 +31,7 @@ pipeline {
       when { expression { env.GIT_BRANCH in ['main', 'origin/main'] } }
       steps {
         withCredentials([sshUserPrivateKey(credentialsId: 'portfolio-deploy', keyFileVariable: 'KEY')]) {
-          sh 'ssh -i "$KEY" -o IdentitiesOnly=yes tonkla@host.docker.internal'
+          sh 'ssh -i "$KEY" -o IdentitiesOnly=yes tonkla@host.docker.internal deploy'
         }
       }
     }
@@ -48,6 +48,13 @@ pipeline {
           echo "health check failed"
           exit 1
         '''
+      }
+      post {
+        failure {
+          withCredentials([sshUserPrivateKey(credentialsId: 'portfolio-deploy', keyFileVariable: 'KEY')]) {
+            sh 'ssh -i "$KEY" -o IdentitiesOnly=yes tonkla@host.docker.internal rollback'
+          }
+        }
       }
     }
   }
