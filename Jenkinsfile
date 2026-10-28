@@ -22,11 +22,7 @@ pipeline {
       steps { sh 'npm ci --no-audit --no-fund' }
     }
     stage('Lint') {
-      steps {
-        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-          sh 'npm run lint'
-        }
-      }
+      steps { sh 'npm run lint' }
     }
     stage('Build') {
       steps { sh 'npm run build' }
