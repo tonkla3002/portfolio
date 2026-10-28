@@ -40,7 +40,7 @@ pipeline {
       steps {
         sh '''
           for i in $(seq 1 12); do
-            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 https://portfolio.thana-wan.duckdns.org/does-not-exist || true)
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 https://portfolio.thana-wan.duckdns.org/ || true)
             echo "attempt $i: HTTP $code"
             [ "$code" = "200" ] && exit 0
             sleep 5
