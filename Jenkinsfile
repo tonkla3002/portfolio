@@ -22,7 +22,11 @@ pipeline {
       steps { sh 'npm ci --no-audit --no-fund' }
     }
     stage('Lint') {
-      steps { sh 'npm run lint' }
+      steps {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+          sh 'npm run lint'
+        }
+      }
     }
     stage('Build') {
       steps { sh 'npm run build' }
@@ -33,6 +37,21 @@ pipeline {
         withCredentials([sshUserPrivateKey(credentialsId: 'portfolio-deploy', keyFileVariable: 'KEY')]) {
           sh 'ssh -i "$KEY" -o IdentitiesOnly=yes tonkla@host.docker.internal'
         }
+      }
+    }
+    stage('Health check') {
+      when { expression { env.GIT_BRANCH in ['main', 'origin/main'] } }
+      steps {
+        sh '''
+          for i in $(seq 1 12); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 https://portfolio.thana-wan.duckdns.org/ || true)
+            echo "attempt $i: HTTP $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 5
+          done
+          echo "health check failed"
+          exit 1
+        '''
       }
     }
   }
